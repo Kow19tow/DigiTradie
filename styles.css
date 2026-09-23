@@ -796,9 +796,28 @@ a.tier:hover .tier-cta {
 }
 
 .article-byline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--ink-muted);
   font-weight: 600;
   margin-top: -8px;
+}
+
+.author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.experience-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
 }
 
 .article-body {
