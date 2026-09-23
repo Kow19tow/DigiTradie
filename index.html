@@ -3,91 +3,222 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DigiTradie — Marketing, run by someone who's on the tools</title>
-<meta name="description" content="Fractional in-house marketing for small and medium businesses. One consultation. A package built to fit. No agency bloat." />
+<title>DigiTradie — Fractional marketing for small &amp; medium businesses</title>
+<meta name="description" content="Fractional in-house marketing for small and medium businesses. One fit-check call, a plain-English dashboard, and a package built to fit." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
 <header class="site-header">
   <div class="wrap">
-    <span class="logo">DigiTradie</span>
-    <a class="btn btn-ghost" href="#contact">Book a consult</a>
+    <a class="logo" href="#">
+      <img src="logo.png" alt="" />
+      <span>DigiTradie</span>
+    </a>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#packages">Packages</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact">Book a fit check</a>
   </div>
 </header>
 
 <main>
   <section class="hero">
-    <div class="wrap">
-      <h1>Your marketing, run by someone who's on the tools.</h1>
-      <p class="lede">
-        DigiTradie is fractional in-house marketing for small and medium businesses —
-        one person, hands-on, doing the work instead of managing a committee of it.
-      </p>
-      <a class="btn btn-primary" href="#contact">Book your consultation</a>
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Fractional marketing for small &amp; medium business</p>
+        <h1>You aren't guaranteed to be our client.</h1>
+        <p class="lede">
+          We only take on businesses we can genuinely help launch, learn or optimise their ads.
+          If we're not the right fit, we'll tell you on the first call.
+        </p>
+        <ul class="checklist">
+          <li>A dashboard you can check any time, even from your phone</li>
+          <li>Set and forget for a once-off fee, or keep us on</li>
+          <li>Learn the basics so you can run it yourself</li>
+        </ul>
+      </div>
+
+      <div class="fit-card" id="contact">
+        <h3>Book a free fit check</h3>
+        <p class="fit-sub">One call. We'll tell you straight whether we can help.</p>
+        <form class="fit-form" action="#" method="post">
+          <label>Your name
+            <input type="text" name="name" autocomplete="name" required />
+          </label>
+          <label>Business name
+            <input type="text" name="business" autocomplete="organization" required />
+          </label>
+          <label>Email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>Phone
+            <input type="tel" name="phone" autocomplete="tel" required />
+          </label>
+          <fieldset>
+            <legend>What do you need?</legend>
+            <label class="pill"><input type="radio" name="need" value="launch" checked /> Launch ads</label>
+            <label class="pill"><input type="radio" name="need" value="learn" /> Learn ads</label>
+            <label class="pill"><input type="radio" name="need" value="optimise" /> Optimise ads</label>
+          </fieldset>
+          <label>Current monthly ad spend
+            <select name="spend">
+              <option>Not running ads yet</option>
+              <option>Under $1k</option>
+              <option>$1k&ndash;$5k</option>
+              <option>Over $5k</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Check if we're a fit</button>
+        </form>
+      </div>
     </div>
   </section>
 
-  <section class="how">
+  <section class="fitcheck">
+    <div class="wrap">
+      <h2>Built for businesses that genuinely need a hand.</h2>
+      <div class="fit-grid">
+        <div class="fit-col fit-good">
+          <h3>Good fit</h3>
+          <ul>
+            <li>You're launching ads for the first time</li>
+            <li>You're spending but can't tell what's working</li>
+            <li>You want to learn enough to handle the basics yourself</li>
+            <li>You want in-house marketing help without a full-time hire</li>
+          </ul>
+        </div>
+        <div class="fit-col fit-bad">
+          <h3>Probably not a fit</h3>
+          <ul>
+            <li>You want someone to promise guaranteed results</li>
+            <li>You're after a big agency with layers of account managers</li>
+            <li>Your in-house team already runs ads well</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
     <div class="wrap">
       <h2>How it works</h2>
-      <p>
-        One consultation call. We work out what your business actually needs, and land on
-        the package that fits — no lengthy back-and-forth quoting, no guessing.
-      </p>
+      <div class="how-grid">
+        <div class="how-step">
+          <span class="how-num">01</span>
+          <h3>Fit check</h3>
+          <p>One consultation to understand your business and whether ads make sense for you right now.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-num">02</span>
+          <h3>Build or fix</h3>
+          <p>We set up or audit your ads and plug in a dashboard that shows what they're actually doing.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-num">03</span>
+          <h3>Hand over or stay on</h3>
+          <p>Run it yourself with the basics we show you, or keep us on as your fractional marketer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-preview">
+    <div class="wrap dashboard-grid">
+      <div>
+        <h2>See what your ads are actually doing.</h2>
+        <p>Every package comes with a plain-English dashboard you can open any time. No logins to five platforms, no guessing.</p>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span>This month</span>
+          <span class="dash-sample">Sample data</span>
+        </div>
+        <div class="dash-stats">
+          <div><span class="dash-label">Leads</span><span class="dash-value">42</span></div>
+          <div><span class="dash-label">Cost per lead</span><span class="dash-value">$38</span></div>
+          <div><span class="dash-label">Spend</span><span class="dash-value">$1.6k</span></div>
+        </div>
+        <div class="dash-bars">
+          <span style="height:30%"></span>
+          <span style="height:40%"></span>
+          <span style="height:45%"></span>
+          <span style="height:60%"></span>
+          <span style="height:55%"></span>
+          <span style="height:70%"></span>
+          <span style="height:100%" class="dash-bar-active"></span>
+        </div>
+        <p class="dash-caption">Leads by week, with what changed and why.</p>
+      </div>
     </div>
   </section>
 
   <section class="tiers" id="packages">
     <div class="wrap">
       <h2>Packages</h2>
+      <p class="tiers-sub">Final scope is agreed after your fit check. Every package includes your dashboard.</p>
 
       <div class="tier-grid">
         <article class="tier">
           <h3>Audit &amp; Optimise</h3>
           <p class="tier-tag">Start here</p>
-          <p>
-            A full look at what's working, what isn't, and the fastest wins available —
-            plus your dashboard, set up and reporting from day one.
-          </p>
+          <p class="tier-desc">Already running ads? We find what's wasting money and fix it.</p>
+          <p class="tier-price">$750 <span>once-off</span></p>
+          <ul class="tier-features">
+            <li>Full account audit</li>
+            <li>Priority fixes applied</li>
+            <li>Walkthrough of what changed</li>
+          </ul>
         </article>
 
         <article class="tier tier-featured">
-          <h3>Dashboard + Ads Set-up</h3>
+          <h3>Dashboard + Ads Setup</h3>
           <p class="tier-tag">Most popular</p>
-          <p>
-            Campaigns built and running, tracked in one dashboard you actually understand.
-            Add coaching if you want to learn the tools yourself, not just receive the results.
-          </p>
-          <p class="tier-addon">+ Coaching add-on available</p>
+          <p class="tier-desc">Launching or starting over. Built properly, then handed to you.</p>
+          <p class="tier-price">$1,500 <span>once-off</span></p>
+          <ul class="tier-features">
+            <li>Campaigns and tracking set up</li>
+            <li>Set and forget handover</li>
+            <li>The basics to manage it from your phone</li>
+          </ul>
+          <p class="tier-addon">Add coaching: +$150 per session</p>
         </article>
 
-        <article class="tier">
+        <article class="tier tier-dark">
           <h3>Fractional In-House Marketer</h3>
           <p class="tier-tag">Ongoing</p>
-          <p>
-            An in-house marketer without the in-house cost. A defined arrangement,
-            or a set-and-forget coaching package — your dashboard included either way.
-          </p>
+          <p class="tier-desc">Ongoing hands-on help, without a full-time hire.</p>
+          <p class="tier-price">$2,500 <span>per month</span></p>
+          <ul class="tier-features">
+            <li>Ongoing optimisation</li>
+            <li>Regular check-ins</li>
+            <li>3-month minimum</li>
+          </ul>
         </article>
       </div>
-
-      <p class="tier-footnote">Every package includes your dashboard. No exceptions.</p>
+      <p class="tier-footnote">Prices in AUD, excluding GST and ad spend.</p>
     </div>
   </section>
 
-  <section class="contact" id="contact">
-    <div class="wrap">
-      <h2>Let's talk</h2>
-      <p>One call. We figure out what fits. Book a time below.</p>
-      <a class="btn btn-primary" href="mailto:kosta.dmedia@gmail.com">Email to book a consult</a>
+  <section class="cta-band">
+    <div class="wrap cta-band-inner">
+      <h2>Let's find out if we're a fit.</h2>
+      <a class="btn btn-light" href="#contact">Book a fit check</a>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
-    <span>&copy; <span id="year"></span> DigiTradie</span>
+    <span>&copy; <span id="year"></span> DigiTradie &middot; ABN [ABN]</span>
+    <span class="footer-contact">
+      <a href="mailto:[EMAIL]">[EMAIL]</a>
+      <a href="tel:[PHONE]">[PHONE]</a>
+    </span>
   </div>
 </footer>
 
