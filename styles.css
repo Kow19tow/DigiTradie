@@ -707,3 +707,144 @@ a.tier:hover .tier-cta {
 .footer-nav a:hover {
   color: var(--ink);
 }
+
+/* Experience section */
+
+.experience {
+  padding: 50px 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.experience .wrap {
+  max-width: 760px;
+}
+
+.experience h2 {
+  margin-bottom: 16px;
+}
+
+.experience p {
+  font-size: 1.05rem;
+}
+
+/* Blog index */
+
+.blog-hero {
+  padding: 60px 0 20px;
+}
+
+.blog-hero h1 {
+  margin-bottom: 12px;
+}
+
+.blog-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 8px;
+  padding: 40px 0 70px;
+}
+
+@media (min-width: 700px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.blog-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  background: var(--card);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(22, 24, 29, 0.1);
+}
+
+.blog-card-tag {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.blog-card h3 {
+  margin-bottom: 10px;
+}
+
+.blog-card p {
+  margin-bottom: 0;
+}
+
+/* Blog article */
+
+.article-meta {
+  padding: 50px 0 0;
+}
+
+.article-meta .eyebrow {
+  margin-bottom: 12px;
+}
+
+.article-byline {
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-top: -8px;
+}
+
+.article-body {
+  padding: 30px 0 60px;
+  max-width: 720px;
+}
+
+.article-body h2 {
+  font-size: 1.5rem;
+  margin-top: 36px;
+}
+
+.article-body h3 {
+  font-size: 1.15rem;
+  margin-top: 24px;
+}
+
+.article-body p,
+.article-body li {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 0 0 20px;
+  padding-left: 22px;
+  color: var(--ink-muted);
+}
+
+.article-body li {
+  margin-bottom: 8px;
+}
+
+.article-body strong {
+  color: var(--ink);
+}
+
+.back-to-blog {
+  display: inline-block;
+  margin: 30px 0 0;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.back-to-blog:hover {
+  text-decoration: underline;
+}
