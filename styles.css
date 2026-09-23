@@ -493,6 +493,21 @@ a { color: inherit; }
   background: var(--card);
 }
 
+a.tier {
+  display: block;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.tier:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(22, 24, 29, 0.1);
+}
+
+a.tier.tier-featured:hover {
+  box-shadow: 0 10px 24px rgba(194, 65, 12, 0.18);
+}
+
 .tier-featured {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent);
@@ -518,6 +533,18 @@ a { color: inherit; }
 
 .tier-desc {
   min-height: 44px;
+}
+
+.tier-roomy h3 {
+  font-size: 1.35rem;
+}
+
+.tier-roomy .tier-desc {
+  font-size: 1.08rem;
+}
+
+.tier-roomy .tier-features li {
+  font-size: 1.05rem;
 }
 
 .tier-price {
@@ -579,20 +606,19 @@ a { color: inherit; }
   font-size: 0.85rem;
 }
 
-.tier-link {
+.tier-cta {
   display: inline-block;
   margin-top: 16px;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--accent);
-  text-decoration: none;
 }
 
-.tier-link:hover {
+a.tier:hover .tier-cta {
   text-decoration: underline;
 }
 
-.tier-dark .tier-link {
+.tier-dark .tier-cta {
   color: #fff;
 }
 
