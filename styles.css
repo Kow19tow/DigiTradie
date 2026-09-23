@@ -579,6 +579,23 @@ a { color: inherit; }
   font-size: 0.85rem;
 }
 
+.tier-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.tier-link:hover {
+  text-decoration: underline;
+}
+
+.tier-dark .tier-link {
+  color: #fff;
+}
+
 /* CTA band */
 
 .cta-band {
@@ -637,4 +654,24 @@ a { color: inherit; }
 .footer-contact a {
   text-decoration: none;
   font-weight: 600;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer-nav a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.footer-nav a:hover {
+  color: var(--ink);
 }
