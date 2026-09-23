@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact DigiTradie — Book a Free Fit Check</title>
+<meta name="description" content="Book a free fit check with DigiTradie. One call, no pressure — we'll tell you straight whether we can help." />
+<meta name="robots" content="noindex, follow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/">
+      <img src="/logo.png" alt="" />
+      <span>DigiTradie</span>
+    </a>
+    <nav>
+      <a href="/#how">How it works</a>
+      <a href="/#packages">Packages</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact-form">Book a fit check</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Get In Touch</p>
+        <h1>Let's find out if we're a fit.</h1>
+        <p class="lede">
+          One call. We'll tell you straight whether we can help — no sales pitch, no pressure.
+          If we're not the right fit for your business, we'll say so.
+        </p>
+        <ul class="checklist">
+          <li>One call, usually 15&ndash;20 minutes</li>
+          <li>No obligation, no lock-in contracts</li>
+          <li>Straight answer, even if it's "not yet"</li>
+        </ul>
+        <p class="contact-direct">
+          Prefer to reach out directly?<br />
+          <a href="mailto:digitradieau@gmail.com">digitradieau@gmail.com</a> &middot;
+          <a href="tel:0409025904">0409 025 904</a>
+        </p>
+      </div>
+
+      <div class="fit-card" id="contact-form">
+        <h3>Book your free fit check</h3>
+        <p class="fit-sub">One call. We'll tell you straight whether we can help.</p>
+        <form class="fit-form" action="https://formspree.io/f/xeaokqng" method="POST">
+          <input type="hidden" name="_subject" value="New lead — Contact page" />
+          <input type="hidden" name="landing_page" value="contact" />
+          <label>Your name
+            <input type="text" name="name" autocomplete="name" required />
+          </label>
+          <label>Business name
+            <input type="text" name="business" autocomplete="organization" required />
+          </label>
+          <label>Email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>Phone
+            <input type="tel" name="phone" autocomplete="tel" required />
+          </label>
+          <fieldset>
+            <legend>What do you need?</legend>
+            <label class="pill"><input type="radio" name="need" value="launch" checked /> Launch ads</label>
+            <label class="pill"><input type="radio" name="need" value="learn" /> Learn ads</label>
+            <label class="pill"><input type="radio" name="need" value="optimise" /> Optimise ads</label>
+          </fieldset>
+          <label>Current monthly ad spend
+            <select name="spend">
+              <option>Not running ads yet</option>
+              <option>Under $1k</option>
+              <option>$1k&ndash;$5k</option>
+              <option>Over $5k</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Check if we're a fit</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; <span id="year"></span> DigiTradie</span>
+    <span class="footer-contact">
+      <a href="mailto:digitradieau@gmail.com">digitradieau@gmail.com</a>
+      <a href="tel:0409025904">0409 025 904</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

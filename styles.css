@@ -221,6 +221,18 @@ a { color: inherit; }
   font-weight: 800;
 }
 
+.contact-direct {
+  margin-top: 28px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.contact-direct a {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink);
+}
+
 /* Fit card / form */
 
 .fit-card {
