@@ -525,7 +525,7 @@ a { color: inherit; }
 
 .tier-dark .tier-price span { color: rgba(255,255,255,0.6); }
 
-.tier-price .tier-price-accent {
+.tier-price span.tier-price-accent {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: inherit;
