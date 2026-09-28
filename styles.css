@@ -131,6 +131,19 @@ a { color: inherit; }
   color: var(--ink);
 }
 
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+}
+
+.thankyou-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .btn-sm {
   padding: 10px 18px;
   font-size: 0.9rem;
