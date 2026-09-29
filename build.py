@@ -58,6 +58,16 @@ INDUSTRY_MAP = [
 
 SMALL_WORDS = {"a", "an", "the", "of", "for", "in", "to", "and", "or", "your", "my"}
 
+GTAG = """<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18469638617"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-18469638617');
+</script>"""
+
 FONT_LINK = (
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
@@ -343,6 +353,7 @@ def render_guide_page(guide, all_guides, doc_date):
     return f"""<!DOCTYPE html>
 <html lang="en-AU">
 <head>
+{GTAG}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{esc(title)}</title>
@@ -444,6 +455,7 @@ def render_hub_page(all_guides):
     return f"""<!DOCTYPE html>
 <html lang="en-AU">
 <head>
+{GTAG}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{esc(title)}</title>
