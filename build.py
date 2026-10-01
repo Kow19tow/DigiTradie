@@ -58,6 +58,25 @@ INDUSTRY_MAP = [
 
 SMALL_WORDS = {"a", "an", "the", "of", "for", "in", "to", "and", "or", "your", "my"}
 
+# Punchier on-page H1 / <title> per guide, keyed by slug. Falls back to the
+# literal "How to market a <industry>" heading from the doc when a slug
+# isn't listed here. Meta description still comes from the doc's intro
+# paragraph, so this only overrides the headline, not the content.
+HEADLINE_OVERRIDES = {
+    "hospitality-marketing": "Hospitality Marketing That Fills Tables Without Discounting Every Night",
+    "tradie-marketing": "Tradie Marketing That Keeps The Job Board Full",
+    "retail-marketing": "Retail Marketing That Turns Browsers Into Buyers",
+    "beauty-salon-marketing": "Beauty Salon Marketing That Keeps Your Books Full",
+    "gym-marketing": "Gym Marketing That Keeps Members Past Month One",
+    "builder-marketing": "Builder Marketing That Wins Bigger Jobs, Not Just More Quotes",
+    "law-firm-marketing": "Law Firm Marketing That Brings In Clients Who Can Pay",
+    "dental-marketing": "Dental Marketing That Fills The Chair, Not Just The Inbox",
+    "accountant-marketing": "Accountant Marketing That Attracts Clients Worth Keeping",
+    "physio-marketing": "Physio Marketing That Builds A Steady Caseload",
+    "mechanic-marketing": "Mechanic Marketing That Keeps The Bays Full",
+    "solar-marketing": "Solar Marketing That Turns Quotes Into Installs",
+}
+
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18469638617"></script>
 <script>
@@ -168,7 +187,7 @@ def parse_docx(path):
                 continue
             slug, label = industry_slug_and_label(text)
             current = {
-                "title": headline_case(text),
+                "title": HEADLINE_OVERRIDES.get(slug, headline_case(text)),
                 "slug": slug,
                 "label": label,
                 "intro": None,
