@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<!-- Source: blog/google-for-tradies "Google Reviews That Say Something Useful". The review is an illustrative example, labelled as such. Render: bash social/render.sh review-example -->
+<link rel="stylesheet" href="../../_shared/base.css">
+<style>
+.tall .eyebrow{margin-top:calc(40*var(--u))}
+.tall .h{font-size:calc(118*var(--u));margin-top:calc(18*var(--u))}
+.rev{background:#fff;color:#14122b;border-radius:calc(34*var(--u));padding:calc(38*var(--u)) calc(42*var(--u)) calc(44*var(--u));box-shadow:0 34px 80px rgba(5,2,30,.55)}
+.tall .rev{margin-top:calc(44*var(--u))}
+.rhead{display:flex;align-items:center;gap:calc(20*var(--u))}
+.av{flex:none;width:calc(76*var(--u));height:calc(76*var(--u));border-radius:50%;background:linear-gradient(135deg,var(--orange2),var(--peri));display:grid;place-items:center;color:#fff;font-weight:800;font-size:calc(36*var(--u))}
+.nm{font-weight:800;font-size:calc(30*var(--u))}
+.stars5{display:flex;gap:calc(4*var(--u));margin-top:calc(6*var(--u))}
+.stars5 svg{width:calc(30*var(--u));height:calc(30*var(--u));fill:#F59E0B}
+.ex{margin-left:auto;font-weight:800;letter-spacing:.14em;font-size:calc(17*var(--u));color:#4a54c8;background:#eceeff;border-radius:999px;padding:calc(9*var(--u)) calc(16*var(--u))}
+.q{font-weight:700;font-size:calc(56*var(--u));line-height:1.28;letter-spacing:-.01em;margin-top:calc(84*var(--u))}
+.hl{position:relative;background:linear-gradient(transparent 58%,rgba(236,112,46,.38) 58%);border-radius:4px}
+.hl.what:before{content:"WHAT YOU DO";position:absolute;left:0;top:calc(-44*var(--u));font-weight:800;font-size:calc(17*var(--u));letter-spacing:.16em;color:#C2410C;white-space:nowrap}
+.hl.what:after{content:"";position:absolute;left:calc(10*var(--u));top:calc(-24*var(--u));width:2px;height:calc(22*var(--u));background:#C2410C}
+.hl.where{background:linear-gradient(transparent 58%,rgba(114,137,255,.45) 58%)}
+.tagr{display:inline-block;vertical-align:middle;margin-left:calc(18*var(--u));font-weight:800;font-size:calc(17*var(--u));letter-spacing:.16em;color:#3c48c9;background:#eceeff;border-radius:999px;padding:calc(9*var(--u)) calc(16*var(--u))}
+.closer{margin-top:calc(50*var(--u))}
+.tall .cta{margin-top:auto;padding-top:calc(24*var(--u))}
+/* wide */
+.wide{gap:44px;align-items:center}
+.wl{width:440px}
+.wh{font-size:78px;margin-top:14px}
+.wl .eyebrow{font-size:15px;gap:10px}.wl .eyebrow:before{width:10px;height:10px}
+.wl .btn{margin-top:26px;display:inline-flex;font-size:21px;padding:15px 26px}
+.wl .closer{font-size:25px;margin-top:20px;gap:12px}.wl .closer:before{width:11px;height:11px;margin-top:9px}
+.wr{flex:1}
+.wr .rev{padding:26px 30px 30px;border-radius:26px}
+.wr .av{width:56px;height:56px;font-size:26px}.wr .nm{font-size:22px}.wr .stars5 svg{width:22px;height:22px}.wr .ex{font-size:13px;padding:7px 12px}
+.wr .q{font-size:34px;margin-top:52px}
+.wr .hl.what:before{font-size:13px;top:-32px}
+.wr .hl.what:after{top:-17px;height:15px}
+.wr .tagr{font-size:13px;padding:7px 12px;margin-left:12px}
+</style></head>
+<body>
+<div class="post theme-indigo" id="post" data-chip="TRADIE TIP" data-icon="star">
+ <div class="pad">
+  <div class="tall">
+    <div class="eyebrow">GOOGLE REVIEWS</div>
+    <h1 class="display h">A useful review<br>looks like <em>this.</em></h1>
+    <div class="rev">
+      <div class="rhead"><div class="av">J</div><div><div class="nm">Happy customer</div>
+        <div class="stars5"><svg viewBox="0 0 24 24"><path id="s" d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9L12 17l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg></div></div>
+        <div class="ex">EXAMPLE REVIEW</div></div>
+      <div class="q">Thanks for <span class="hl what">unblocking our drain</span><br>in <span class="hl where">Reservoir</span>.<span class="tagr">&larr; WHERE YOU DO IT</span></div>
+    </div>
+    <div class="closer"><div>Google reads that and learns <em>what you do</em> and <em>where you do it.</em></div></div>
+    <div class="cta"><div class="btn">Read the Google guide <svg viewBox="0 0 24 24" fill="none" stroke="#1a0b2e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div><div class="url">digitradie.com/blog</div></div>
+  </div>
+  <div class="wide">
+    <div class="wl"><div class="eyebrow">GOOGLE REVIEWS</div><h1 class="display wh">A useful review looks like <em>this.</em></h1>
+      <div class="closer"><div>Google learns <em>what you do</em> and <em>where.</em></div></div>
+      <div class="btn">Read the Google guide <svg viewBox="0 0 24 24" fill="none" stroke="#1a0b2e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div></div>
+    <div class="wr"><div class="rev">
+      <div class="rhead"><div class="av">J</div><div><div class="nm">Happy customer</div>
+        <div class="stars5"><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg><svg viewBox="0 0 24 24"><use href="#s"/></svg></div></div>
+        <div class="ex">EXAMPLE REVIEW</div></div>
+      <div class="q">Thanks for <span class="hl what">unblocking our drain</span><br>in <span class="hl where">Reservoir</span>.<span class="tagr">&larr; WHERE YOU DO IT</span></div>
+    </div></div>
+  </div>
+ </div>
+</div>
+<script src="../../_shared/base.js"></script>
+</body></html>

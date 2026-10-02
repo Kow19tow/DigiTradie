@@ -77,6 +77,15 @@ HEADLINE_OVERRIDES = {
     "solar-marketing": "Solar Marketing That Turns Quotes Into Installs",
 }
 
+# Optional per-guide image (hero + og:image + schema image), keyed by slug.
+# Files live in /images and are produced by social/export_web.py. Guides not listed use the default og-image.png.
+GUIDE_IMAGES = {
+    "tradie-marketing": (
+        "urgent-vs-considered-1200x630.jpg",
+        "Urgency decides the channel: urgent tradie jobs go Google first, considered jobs go social first. DigiTradie DIY guide.",
+    ),
+}
+
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-N0PS84JLP6"></script>
 <script>
@@ -333,6 +342,14 @@ def render_guide_page(guide, all_guides, doc_date):
     body_sections = "\n".join(render_section(s) for s in guide["sections"])
     faq_html = render_faqs(guide["faqs"])
 
+    img_file, img_alt = GUIDE_IMAGES.get(guide["slug"], (None, None))
+    og_image = f"{SITE_URL}/images/{img_file}" if img_file else f"{SITE_URL}/og-image.png"
+    hero_html = (
+        f'      <img class="article-hero" src="/images/{img_file}" width="1200" height="630"\n'
+        f'           alt="{esc(img_alt)}" />\n'
+        if img_file else ""
+    )
+
     other_guides = [g for g in all_guides if g["slug"] != guide["slug"]][:3]
     related = "\n".join(
         f'''        <a class="blog-card" href="/learn/{g["slug"]}">
@@ -353,6 +370,8 @@ def render_guide_page(guide, all_guides, doc_date):
         "datePublished": doc_date or datetime.now().strftime("%Y-%m-%d"),
         "mainEntityOfPage": url,
     }
+    if img_file:
+        article_ld["image"] = og_image
     breadcrumb_ld = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -389,14 +408,14 @@ def render_guide_page(guide, all_guides, doc_date):
 <meta property="og:title" content="{esc(guide['title'])}" />
 <meta property="og:description" content="{esc(meta_desc)}" />
 <meta property="og:url" content="{url}" />
-<meta property="og:image" content="{SITE_URL}/og-image.png" />
+<meta property="og:image" content="{og_image}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{esc(guide['title'])}" />
 <meta name="twitter:description" content="{esc(meta_desc)}" />
-<meta name="twitter:image" content="{SITE_URL}/og-image.png" />
+<meta name="twitter:image" content="{og_image}" />
 
 {FONT_LINK}
 
@@ -423,7 +442,7 @@ def render_guide_page(guide, all_guides, doc_date):
 
   <section class="article-body">
     <div class="wrap article-wrap">
-{body_sections}
+{hero_html}{body_sections}
 {faq_html}
     </div>
   </section>
