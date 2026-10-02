@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<!-- Layout is chosen by the URL hash: #portrait (1080x1350) | #square (1080x1080) | #landscape (1200x630). See ../README.md -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--orange:#EC702E;--orange2:#FF9A4D;--navy:#30405C;--peri:#7289ff;--lilac:#c9b8ff;--u:1px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#120a45}
+.post{position:relative;overflow:hidden;color:#fff;font-family:'Figtree',sans-serif;
+  background:
+   radial-gradient(900px 700px at 8% 96%, rgba(236,112,46,.20), transparent 60%),
+   radial-gradient(1100px 900px at 100% 100%, #2563eb 0%, rgba(37,99,235,0) 62%),
+   radial-gradient(900px 700px at 0% 0%, #2a1a8a 0%, rgba(42,26,138,0) 70%),
+   linear-gradient(160deg,#1a0b4f 0%,#1b1070 38%,#21219a 72%,#2559d8 100%);}
+.grid{position:absolute;inset:0;opacity:.9;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:60px 60px;-webkit-mask:radial-gradient(ellipse 85% 70% at 40% 35%,#000 20%,transparent 85%);mask:radial-gradient(ellipse 85% 70% at 40% 35%,#000 20%,transparent 85%)}
+.stars{position:absolute;inset:0;width:100%;height:100%}
+.grain{position:absolute;inset:0;opacity:.10;mix-blend-mode:overlay;pointer-events:none;width:100%;height:100%}
+.tape{position:absolute;left:0;right:0;bottom:0;height:18px;opacity:.95;
+  background:repeating-linear-gradient(-45deg,#EC702E 0 22px,#17141f 22px 44px);box-shadow:0 -6px 30px rgba(236,112,46,.25)}
+.pad{position:absolute;inset:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center}
+.brand img{border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.14),0 10px 30px rgba(0,0,0,.35)}
+.brand span{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.01em}
+.chip{display:flex;align-items:center;background:rgba(30,30,36,.8);border:1.5px solid rgba(255,255,255,.12);border-radius:999px;font-weight:700;letter-spacing:.16em;backdrop-filter:blur(6px)}
+.chip svg{flex:none}
+.hero{position:relative}
+.lab{font-weight:700;letter-spacing:.2em;color:var(--lilac);display:flex;align-items:center}
+.lab:before{content:"";background:var(--peri);display:block}
+.num{font-family:'Bricolage Grotesque';font-weight:800;line-height:.9;letter-spacing:-.045em}
+.a .num{color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.25)}
+.b .num{background:linear-gradient(180deg,var(--orange2) 0%,var(--orange) 55%,#E4571F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 40px rgba(236,112,46,.35))}
+.arrow{display:flex;align-items:center}
+.arrow .ring{border-radius:50%;background:var(--orange);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(236,112,46,.18),0 12px 30px rgba(236,112,46,.4)}
+.arrow .line{flex:1;height:3px;background:linear-gradient(90deg,rgba(236,112,46,.9),rgba(255,255,255,0));border-radius:3px}
+.stairs{position:absolute;display:flex;align-items:flex-end}
+.stairs div{flex:1;border-radius:10px;-webkit-mask:repeating-linear-gradient(180deg,#000 0 var(--seg),transparent var(--seg) calc(var(--seg) + var(--gap)));mask:repeating-linear-gradient(180deg,#000 0 var(--seg),transparent var(--seg) calc(var(--seg) + var(--gap)))}
+.stairs div:nth-child(1){height:14%;background:linear-gradient(180deg,#b7a4ff,#7289ff);opacity:.55}
+.stairs div:nth-child(2){height:30%;background:linear-gradient(180deg,#b7a4ff,#7289ff);opacity:.65}
+.stairs div:nth-child(3){height:48%;background:linear-gradient(180deg,#d8ccff,#7289ff);opacity:.78}
+.stairs div:nth-child(4){height:68%;background:linear-gradient(180deg,#ffd0a8,#9db4ff);opacity:.88}
+.stairs div:nth-child(5){height:100%;background:linear-gradient(180deg,var(--orange2),var(--orange) 60%,#E4571F);filter:drop-shadow(0 0 26px rgba(236,112,46,.65))}
+.card{background:linear-gradient(180deg,rgba(52,53,60,.93),rgba(40,41,47,.93));border:1.5px solid rgba(255,255,255,.10);box-shadow:0 30px 70px rgba(5,2,30,.55),inset 0 1px 0 rgba(255,255,255,.08)}
+.card p.body{font-weight:500;color:rgba(255,255,255,.88)}
+.card p.body b{color:#fff;font-weight:700}
+.rule{background:rgba(255,255,255,.10)}
+.tag{font-family:'Bricolage Grotesque';font-weight:700;letter-spacing:-.02em;line-height:1.1;display:flex;align-items:flex-start}
+.tag:before{content:"";flex:none;background:var(--peri);box-shadow:0 0 18px rgba(114,137,255,.8)}
+.tag em{font-style:normal;color:var(--orange2)}
+.cta{display:flex;align-items:center;justify-content:space-between}
+.btn{display:flex;align-items:center;background:linear-gradient(180deg,var(--orange2),var(--orange));color:#1a0b2e;font-weight:800;border-radius:999px;box-shadow:0 14px 40px rgba(236,112,46,.45)}
+.url{font-weight:600;color:var(--lilac);letter-spacing:.01em}
+
+/* ---------- PORTRAIT 1080x1350 ---------- */
+.portrait{width:1080px;height:1350px}
+.portrait .pad{padding:84px 84px 98px}
+.portrait .brand img{width:84px;height:84px}.portrait .brand{gap:20px}.portrait .brand span{font-size:38px}
+.portrait .chip{gap:14px;padding:16px 28px;font-size:22px}
+.portrait .hero{margin-top:46px}
+.portrait .lab{font-size:26px;gap:14px}.portrait .lab:before{width:14px;height:14px}
+.portrait .num{font-size:214px;margin-top:2px}
+.portrait .arrow{gap:22px;margin:22px 0 20px;width:520px}.portrait .arrow .ring{width:68px;height:68px}
+.portrait .stairs{right:6px;bottom:6px;width:352px;height:500px;gap:14px;--seg:22px;--gap:6px}
+.portrait .card{margin-top:auto;border-radius:34px;padding:36px 44px 34px}
+.portrait .card p.body{font-size:33px;line-height:1.36}
+.portrait .rule{height:2px;margin:24px 0}
+.portrait .tag{font-size:46px;gap:18px}.portrait .tag:before{width:18px;height:18px;margin-top:13px}
+.portrait .cta{margin-top:28px}.portrait .btn{gap:16px;font-size:30px;padding:22px 36px}.portrait .url{font-size:30px}
+
+/* ---------- SQUARE 1080x1080 ---------- */
+.square{width:1080px;height:1080px}
+.square .pad{padding:64px 72px 84px}
+.square .brand img{width:72px;height:72px}.square .brand{gap:18px}.square .brand span{font-size:34px}
+.square .chip{gap:12px;padding:13px 24px;font-size:19px}
+.square .hero{margin-top:34px}
+.square .lab{font-size:22px;gap:12px}.square .lab:before{width:12px;height:12px}
+.square .num{font-size:168px;margin-top:0}
+.square .arrow{gap:18px;margin:16px 0 14px;width:420px}.square .arrow .ring{width:56px;height:56px}
+.square .stairs{right:0;bottom:4px;width:320px;height:400px;gap:12px;--seg:18px;--gap:5px}
+.square .card{margin-top:auto;border-radius:30px;padding:28px 38px 28px}
+.square .card p.body{font-size:28px;line-height:1.35}
+.square .rule{height:2px;margin:18px 0}
+.square .tag{font-size:38px;gap:16px}.square .tag:before{width:15px;height:15px;margin-top:11px}
+.square .cta{margin-top:22px}.square .btn{gap:14px;font-size:26px;padding:18px 30px}.square .url{font-size:26px}
+
+/* ---------- LANDSCAPE 1200x630 (website OG / cards) ---------- */
+.landscape{width:1200px;height:630px}
+.landscape .pad{padding:44px 56px 56px}
+.landscape .brand img{width:62px;height:62px}.landscape .brand{gap:16px}.landscape .brand span{font-size:30px}
+.landscape .chip{gap:11px;padding:11px 20px;font-size:16px}
+.landscape .hero{position:static;margin-top:24px;display:flex;align-items:flex-end;gap:26px;width:900px}
+.landscape .stat{display:block}
+.landscape .lab{font-size:17px;gap:10px}.landscape .lab:before{width:10px;height:10px}
+.landscape .num{font-size:176px}
+.landscape .arrow{flex:none;padding-bottom:36px}.landscape .arrow .line{display:none}.landscape .arrow .ring{width:54px;height:54px;box-shadow:0 0 0 7px rgba(236,112,46,.18),0 10px 24px rgba(236,112,46,.4)}
+.landscape .arrow svg{width:28px;height:28px;transform:rotate(-90deg)}
+.landscape .stairs{right:60px;bottom:212px;width:196px;height:262px;gap:9px;--seg:14px;--gap:4px}
+.landscape .card{margin-top:auto;border-radius:26px;padding:22px 32px;display:grid;grid-template-columns:1fr auto;column-gap:36px;align-items:center}
+.landscape .card p.body{font-size:22px;line-height:1.35}
+.landscape .rule{display:none}
+.landscape .tag{font-size:32px;gap:12px;margin-top:10px}.landscape .tag:before{width:12px;height:12px;margin-top:9px}
+.landscape .tag br{display:none}.landscape .tag em:before{content:" "}
+.landscape .textcol{grid-column:1}
+.landscape .cta{grid-column:2;flex-direction:column;align-items:flex-end;gap:12px;margin:0}
+.landscape .btn{gap:12px;font-size:22px;padding:16px 26px}.landscape .url{font-size:19px}
+.landscape .tape{height:14px}
+</style></head>
+<body>
+<div class="post" id="post">
+  <div class="grid"></div>
+  <canvas class="stars" id="stars"></canvas>
+  <svg class="grain"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+  <div class="tape"></div>
+  <div class="pad">
+    <div class="top">
+      <div class="brand"><img src="logo-circle.png"><span>DigiTradie</span></div>
+      <div class="chip"><svg width="1.25em" height="1.25em" viewBox="0 0 24 24" fill="none" stroke="#FF9A4D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5a8 8 0 0 1 16 0"/><path d="M2.5 16.5h19"/><path d="M10 16.5V8.2h4v8.3"/></svg>TRADIE CASE STUDY</div>
+    </div>
+    <div class="hero">
+      <div class="stairs"><div></div><div></div><div></div><div></div><div></div></div>
+      <div class="stat a"><div class="lab">AD SPEND</div><div class="num">$500</div></div>
+      <div class="arrow"><div class="ring"><svg width="40%" height="40%" viewBox="0 0 24 24" fill="none" stroke="#1a0b2e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div><div class="line"></div></div>
+      <div class="stat b"><div class="lab">PROFIT</div><div class="num">$75K</div></div>
+    </div>
+    <div class="card">
+      <div class="textcol">
+        <p class="body">One offer change turned a tiny ad budget into <b>six figures of profit</b> for a Melbourne renovation business.</p>
+        <div class="rule"></div>
+        <div class="tag"><div>The right offer beats a discount.<br><em>Every time.</em></div></div>
+      </div>
+      <div class="cta"><div class="btn">Read the case study <svg width="1.05em" height="1.05em" viewBox="0 0 24 24" fill="none" stroke="#1a0b2e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div><div class="url">digitradie.com/blog</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const L=(location.hash||'#portrait').slice(1);const post=document.getElementById('post');post.classList.add(L);
+const W=post.offsetWidth,H=post.offsetHeight;
+const c=document.getElementById('stars');c.width=W;c.height=H;const x=c.getContext('2d');
+let s=11;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647};
+const cols=['#ffffff','#c9b8ff','#9db4ff','#8a7bff'];
+const count=Math.round(W*H/36000);               // far fewer than v1 (~95 on portrait)
+for(let i=0;i<count;i++){
+  const px=rnd()*W,py=rnd()*H,sz=[3,3,4,4,6][Math.floor(rnd()*5)];
+  x.globalAlpha=.18+rnd()*.40;x.fillStyle=cols[Math.floor(rnd()*cols.length)];x.shadowColor=x.fillStyle;x.shadowBlur=sz;x.fillRect(px,py,sz,sz);
+}
+function star(px,py,r,a){x.globalAlpha=a;x.fillStyle='#d8ccff';x.shadowColor='#8a7bff';x.shadowBlur=r*1.5;const t=r/6;x.fillRect(px-t/2,py-r,t,r*2);x.fillRect(px-r,py-t/2,r*2,t);}
+star(W*.945,H*.17,22,.7);star(W*.04,H*.5,16,.5);
+document.querySelectorAll('.grain').forEach(g=>{g.setAttribute('width',W);g.setAttribute('height',H)});
+</script>
+</body></html>

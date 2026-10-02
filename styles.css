@@ -841,6 +841,14 @@ a.tier:hover .tier-cta {
   max-width: 720px;
 }
 
+.article-hero {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  margin: 0 0 32px;
+}
+
 .article-body h2 {
   font-size: 1.5rem;
   margin-top: 36px;
