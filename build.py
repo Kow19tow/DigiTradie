@@ -322,7 +322,7 @@ def learn_dropdown_html(all_guides):
         f'          <li><a href="/learn/{g["slug"]}">{esc(g["label"])}</a></li>' for g in all_guides
     )
     return f"""<details class="nav-dropdown">
-      <summary>Market Your Industry <span aria-hidden="true">&#9662;</span></summary>
+      <summary><span class="lbl-full">Market Your Industry</span><span class="lbl-short">Guides</span> <span aria-hidden="true">&#9662;</span></summary>
       <div class="nav-dropdown-panel">
         <p class="nav-dropdown-label">DIY Marketing For Your Industry</p>
         <ul class="nav-dropdown-menu">
