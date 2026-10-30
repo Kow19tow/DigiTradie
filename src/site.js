@@ -5,6 +5,7 @@
   var reduce = w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function ev(name, params) { try { if (w.gtag) w.gtag('event', name, params || {}); } catch (e) {} }
+  function clean(v) { return String(v || '').slice(0, 100).replace(/[^\w.\-+ %]/g, ''); }
   function store(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) {} return null; }
 
   // footer year
@@ -77,8 +78,8 @@
 
   // lead forms: attribution capture, two steps, events
   var q = new URLSearchParams(w.location.search);
-  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'gclid'].forEach(function (k) { if (q.get(k)) store('dt_' + k, q.get(k)); });
-  if (!store('dt_landing')) { store('dt_landing', w.location.pathname); store('dt_ref', d.referrer || ''); }
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'gclid'].forEach(function (k) { if (q.get(k)) store('dt_' + k, clean(q.get(k))); });
+  if (!store('dt_landing')) { store('dt_landing', w.location.pathname); store('dt_ref', (d.referrer || '').slice(0, 200).replace(/[^\w.\-+:/?=&%#~@!,;]/g, '')); }
   [].slice.call(d.querySelectorAll('.fitform')).forEach(function (f) {
     var card = f.closest('.fitcard'), started = false;
     function set(n, v) { var i = f.elements[n]; if (i) i.value = v || ''; }
@@ -95,19 +96,20 @@
     }
     f.addEventListener('focusin', function () {
       if (started) return; started = true;
-      ev('form_start', { form_location: f.getAttribute('data-form') });
+      ev('fitcheck_start', { form_location: f.getAttribute('data-form') });
     });
     var nx = f.querySelector('[data-next]'), bk = f.querySelector('[data-back]');
     if (nx) nx.addEventListener('click', function () {
-      ev('form_step_complete', { form_location: f.getAttribute('data-form'), need: (f.elements.need || {}).value });
+      ev('fitcheck_step', { form_location: f.getAttribute('data-form'), need: (f.elements.need || {}).value });
       go(2);
     });
     if (bk) bk.addEventListener('click', function () { go(1); });
     f.addEventListener('submit', function () {
+      store('dt_submitted', '1');
       var need = (f.querySelector('input[name=need]:checked') || {}).value || '';
       var spend = (f.elements.spend || {}).value || '';
       set('_subject', 'New DigiTradie fit check: ' + need + ' | ' + spend + ' | ' + (f.elements.business || {}).value);
-      ev('form_submit', { form_location: f.getAttribute('data-form'), need: need, spend: spend });
+      ev('fitcheck_submit', { form_location: f.getAttribute('data-form'), need: need, spend: spend });
     });
   });
 

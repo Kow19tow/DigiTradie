@@ -2,6 +2,7 @@
 
 Everything the site repeats lives here so a change is made once and `python3 build.py` rolls it out.
 """
+import base64
 import hashlib
 import html
 import json
@@ -125,10 +126,10 @@ def init_assets():
 # ---------------------------------------------------------------- <head>
 GTAG_LOADER = f"""<script>
 window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}
-gtag('js',new Date());gtag('config','{GA}');
+gtag('js',new Date());gtag('config','{GA}',{{cookie_flags:'SameSite=Lax;Secure'}});
 var ad=/[?&](gclid|gbraid|wbraid)=/.test(location.search)||location.pathname==='/thank-you';
 try{{if(/[?&](gclid|gbraid|wbraid)=/.test(location.search))sessionStorage.setItem('dt_ad','1');ad=ad||!!sessionStorage.getItem('dt_ad')}}catch(e){{}}
-if(ad)gtag('config','{AW}');
+if(ad)gtag('config','{AW}',{{cookie_flags:'SameSite=Lax;Secure'}});
 (function(){{var d=0;function l(){{if(d)return;d=1;var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id={GA}';document.head.appendChild(s)}}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){{addEventListener(e,l,{{once:true,passive:true}})}});
 window.dtLoadGtag=l;addEventListener('load',function(){{setTimeout(l,2500)}})}})();
@@ -203,10 +204,45 @@ def faq_node(faqs, url):
         "@type": "FAQPage",
         "@id": url + "#faq",
         "mainEntity": [
-            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub(r"<[^>]+>", "", a)}}
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": html.unescape(re.sub(r"<[^>]+>", "", a))}}
             for q, a in faqs
         ],
     }
+
+
+# ---------------------------------------------------------------- Content-Security-Policy
+# Scripts may only come from this site, from Google's tag domains, or be one of OUR inline scripts (allowed by sha256 hash,
+# computed per page at build time). Anything injected into a page (XSS) cannot run. Frames, plugins, other form targets
+# and <base> tricks are blocked. `frame-ancestors` and `upgrade-insecure-requests` live in the HTTP header (see seo_files).
+_G = ["https://www.googletagmanager.com", "https://www.google-analytics.com", "https://*.google-analytics.com", "https://analytics.google.com",
+      "https://*.analytics.google.com", "https://*.doubleclick.net", "https://www.googleadservices.com", "https://*.google.com",
+      "https://*.google.com.au", "https://*.googlesyndication.com"]
+
+
+def csp_meta(full_html):
+    hashes = []
+    for m in re.finditer(r"<script(?![^>]*\bsrc=)(?![^>]*application/ld\+json)[^>]*>(.*?)</script>", full_html, re.S):
+        hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode() + "'")
+    script = " ".join(["'self'"] + sorted(set(hashes)) +
+                      ["https://www.googletagmanager.com", "https://www.google-analytics.com", "https://www.googleadservices.com", "https://googleads.g.doubleclick.net", "https://www.google.com"])
+    policy = "; ".join([
+        "default-src 'self'",
+        f"script-src {script}",
+        "connect-src 'self' " + " ".join(_G),
+        "img-src 'self' data: " + " ".join(_G),
+        "style-src 'self' 'unsafe-inline'",
+        "font-src 'self'",
+        "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://*.doubleclick.net https://www.google.com",
+        "form-action 'self' https://formspree.io",
+        "base-uri 'self'",
+        "object-src 'none'",
+    ])
+    return f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
+
+
+def with_csp(full_html):
+    marker = '<meta charset="utf-8">\n'
+    return full_html.replace(marker, marker + csp_meta(full_html), 1)
 
 
 def head(*, title, desc, path, og_image=None, og_type="website", nodes=None, robots="index,follow", page_type="WebPage",
@@ -233,7 +269,7 @@ def head(*, title, desc, path, og_image=None, og_type="website", nodes=None, rob
         graph.append(breadcrumb_node(crumbs, url))
     graph.append(page)
     graph.extend(nodes or [])
-    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(",", ":"))
+    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
     pre = preload_hero or ""
     return f"""<!DOCTYPE html>
 <html lang="en-AU">
@@ -391,12 +427,12 @@ def form(fid, *, source, heading="Book a free fit check", sub="One call, usually
     </div>
     <div class="fstep" data-step="2">
       <div class="two-col">
-        <label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" required></label>
-        <label class="field"><span>Business name</span><input type="text" name="business" autocomplete="organization" required></label>
+        <label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" maxlength="100" required></label>
+        <label class="field"><span>Business name</span><input type="text" name="business" autocomplete="organization" maxlength="120" required></label>
       </div>
       <div class="two-col">
-        <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
-        <label class="field"><span>Phone</span><input type="tel" name="phone" autocomplete="tel" required></label>
+        <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" maxlength="254" inputmode="email" required></label>
+        <label class="field"><span>Phone</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="30" pattern="[0-9 +\\-\\(\\)]{{6,30}}" title="Phone number, for example 0400 000 000" required></label>
       </div>
       <button type="submit" class="btn btn-primary btn-block btn-submit">Check if we&rsquo;re a fit {icon("arrow-right")}</button>
       <button type="button" class="back-link" data-back>&larr; Back</button>
@@ -411,7 +447,7 @@ def write_page(path, html_head, body, *, crumbs=None):
     """path like '/services/google-ads' or '/'. Writes <path>/index.html."""
     out = ROOT / path.strip("/") / "index.html" if path != "/" else ROOT / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(html_head + body)
+    out.write_text(with_csp(html_head + body))
     return out
 
 

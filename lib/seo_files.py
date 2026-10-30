@@ -88,9 +88,29 @@ def write_feed(posts):
         f"<description>Straight-talking marketing advice for small business.</description><language>en-AU</language>{''.join(items)}</channel></rss>\n")
 
 
+def write_security_txt():
+    from datetime import date
+    d = ROOT / ".well-known"
+    d.mkdir(exist_ok=True)
+    exp = date.today().replace(year=date.today().year + 1).isoformat()
+    (d / "security.txt").write_text(
+        f"Contact: mailto:{EMAIL}\nExpires: {exp}T00:00:00.000Z\nPreferred-Languages: en\nCanonical: {SITE}/.well-known/security.txt\n")
+
+
 def write_hosting():
-    sec = [{"key": "X-Content-Type-Options", "value": "nosniff"}, {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
-           {"key": "X-Frame-Options", "value": "SAMEORIGIN"}, {"key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()"}]
+    header_csp = ("frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self' https://formspree.io; upgrade-insecure-requests")
+    sec = [
+        {"key": "Strict-Transport-Security", "value": "max-age=63072000"},
+        {"key": "Content-Security-Policy", "value": header_csp},
+        {"key": "X-Content-Type-Options", "value": "nosniff"},
+        {"key": "X-Frame-Options", "value": "DENY"},
+        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+        {"key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()"},
+        {"key": "Cross-Origin-Opener-Policy", "value": "same-origin"},
+        {"key": "X-Permitted-Cross-Domain-Policies", "value": "none"},
+        {"key": "Access-Control-Allow-Origin", "value": SITE},
+        {"key": "Vary", "value": "Origin"},
+    ]
     cfg = {
         "cleanUrls": True,
         "trailingSlash": False,
@@ -102,4 +122,9 @@ def write_hosting():
         "redirects": [{"source": "/index.html", "destination": "/", "permanent": True}],
     }
     (ROOT / "vercel.json").write_text(json.dumps(cfg, indent=2) + "\n")
-    (ROOT / ".vercelignore").write_text("# Not part of the website: source files, working folders and scripts\nsocial\nbrand\nTool Icons\nPics of me\nContent Used\ncontent\nlib\nsrc\nbuild.py\nREADME.md\n*.py\nog/.cache.json\n.DS_Store\n")
+    (ROOT / ".vercelignore").write_text(
+        "# Not part of the website: source files, working folders, scripts and docs\n"
+        "social\nbrand\nTool Icons\nPics of me\nContent Used\ncontent\nlib\nsrc\nscripts\n.github\n"
+        "build.py\nREADME.md\nSECURITY.md\nrequirements.txt\n*.py\nog/.cache.json\n.DS_Store\n")
+    (ROOT / "requirements.txt").write_text("# Build-time tools only (nothing here ships to visitors). Dependabot watches this file.\npython-docx>=1.1.2\npillow>=11.3.0\n")
+    write_security_txt()

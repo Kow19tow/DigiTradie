@@ -1,5 +1,6 @@
 """Branded 1200x630 share images (/og/<name>.jpg), rendered with headless Chrome. Cached by content hash."""
 import hashlib
+import html as _html
 import json
 import subprocess
 import tempfile
@@ -61,7 +62,7 @@ def _split_em(title):
 
 def add_guides(guides):
     for g in guides:
-        CARDS[f"learn-{g['slug']}"] = (f"DIY guide &middot; {g['label']}", _split_em(g["title"]), "Free, straight-talking marketing guide from DigiTradie.")
+        CARDS[f"learn-{g['slug']}"] = (f"DIY guide &middot; {_html.escape(g['label'])}", _split_em(_html.escape(g["title"])), "Free, straight-talking marketing guide from DigiTradie.")
 
 
 def build_all():

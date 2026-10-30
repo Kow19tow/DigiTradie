@@ -1,0 +1,22 @@
+name: Weekly backup
+# Saves a full copy of the repository (all branches and tags) as a downloadable file, kept for 90 days.
+on:
+  schedule:
+    - cron: "23 3 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git bundle create digitradie-backup.bundle --all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digitradie-backup-${{ github.run_id }}
+          path: digitradie-backup.bundle
+          retention-days: 90

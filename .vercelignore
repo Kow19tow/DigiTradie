@@ -1,4 +1,4 @@
-# Not part of the website: source files, working folders and scripts
+# Not part of the website: source files, working folders, scripts and docs
 social
 brand
 Tool Icons
@@ -7,8 +7,12 @@ Content Used
 content
 lib
 src
+scripts
+.github
 build.py
 README.md
+SECURITY.md
+requirements.txt
 *.py
 og/.cache.json
 .DS_Store

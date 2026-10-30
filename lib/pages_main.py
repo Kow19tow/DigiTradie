@@ -370,7 +370,7 @@ def build_thanks():
     steps = timeline([("We read your details", "Your request has landed in our inbox."), ("We get in touch to book your call", "By email or phone, usually to find a time that suits you."), ("One call, usually 15 to 20 minutes", "We tell you straight whether we can help.")])
     conv = (f"gtag('event','conversion',{{send_to:'{AW}/{ADS_CONVERSION_LABEL}'}});" if ADS_CONVERSION_LABEL else "")
     script = f"""<script>
-(function(){{var k='dt_lead_sent';try{{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}}catch(e){{}}
+(function(){{var k='dt_lead_sent';try{{if(!sessionStorage.getItem('dt_submitted')||sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');sessionStorage.removeItem('dt_submitted')}}catch(e){{return}}
 if(window.dtLoadGtag)dtLoadGtag();
 gtag('event','generate_lead',{{method:'fit_check_form',currency:'AUD'}});{conv}}})();
 </script>"""
@@ -410,11 +410,11 @@ def build_privacy():
 
 
 def build_404():
-    from .core import head, header, footer, write_page, ROOT
+    from .core import head, header, footer, with_csp, ROOT
     h = head(title="Page not found | DigiTradie", desc="That page could not be found.", path="/404", robots="noindex,follow")
     main = f"""<section class="phero phero-dark"><div class="phero-bg" aria-hidden="true"><span class="grid"></span><span class="sparks"></span></div>
 <div class="wrap phero-in"><div class="phero-copy"><p class="chip"><span class="dot"></span>Error 404</p><h1>That page has <em>gone missing.</em></h1>
 <p class="lede">The link may be old or mistyped. Here is where most people want to go.</p>
 <div class="hero-actions"><a class="btn btn-glow" href="/">Back to the homepage</a><a class="btn btn-ghost" href="/contact">Book a fit check</a><a class="btn btn-ghost" href="/learn">Free guides</a></div></div></div><div class="tape" aria-hidden="true"></div></section>"""
     body = header() + f'<main id="main">{main}</main>' + footer()
-    (ROOT / "404.html").write_text(h + body)
+    (ROOT / "404.html").write_text(with_csp(h + body))
