@@ -102,4 +102,4 @@ def write_hosting():
         "redirects": [{"source": "/index.html", "destination": "/", "permanent": True}],
     }
     (ROOT / "vercel.json").write_text(json.dumps(cfg, indent=2) + "\n")
-    (ROOT / ".vercelignore").write_text("# Not part of the website: source files, working folders and scripts\nsocial\nbrand\nTool Icons\nPics of me\nContent Used\ncontent\nlib\nsrc\nbuild.py\nREADME.md\n*.py\n.DS_Store\n")
+    (ROOT / ".vercelignore").write_text("# Not part of the website: source files, working folders and scripts\nsocial\nbrand\nTool Icons\nPics of me\nContent Used\ncontent\nlib\nsrc\nbuild.py\nREADME.md\n*.py\nog/.cache.json\n.DS_Store\n")

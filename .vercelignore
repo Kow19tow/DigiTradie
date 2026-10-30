@@ -10,4 +10,5 @@ src
 build.py
 README.md
 *.py
+og/.cache.json
 .DS_Store
