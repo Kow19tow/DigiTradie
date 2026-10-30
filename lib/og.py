@@ -18,24 +18,20 @@ TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:B;src:url("file://%(fonts)s/bricolage-grotesque-latin.woff2");font-weight:500 800}
 @font-face{font-family:F;src:url("file://%(fonts)s/figtree-latin.woff2");font-weight:400 800}
 *{box-sizing:border-box;margin:0;padding:0}
-body{width:1200px;height:630px;overflow:hidden;color:#fff;font-family:F,sans-serif;position:relative;background:
- radial-gradient(900px 600px at 92%% -10%%,rgba(37,89,216,.7),transparent 62%%),
- radial-gradient(700px 520px at -4%% 108%%,rgba(236,112,46,.28),transparent 60%%),
- linear-gradient(160deg,#120a45 0%%,#1a0b4f 38%%,#21219a 82%%,#2559d8 125%%)}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:56px 56px;
- -webkit-mask:radial-gradient(ellipse 85%% 80%% at 35%% 35%%,#000 20%%,transparent 85%%)}
+body{width:1200px;height:630px;overflow:hidden;color:#fff;font-family:F,sans-serif;position:relative;background:#30405c}
 .top{position:absolute;left:64px;right:64px;top:48px;display:flex;justify-content:space-between;align-items:center}
-.brand{display:flex;align-items:center;gap:16px;font:800 34px B}
-.brand img{width:64px;height:64px;border-radius:50%%;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
-.chip{font:700 18px F;letter-spacing:.16em;text-transform:uppercase;color:#c9b8ff;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);padding:12px 22px;border-radius:999px}
-h1{position:absolute;left:64px;right:90px;top:170px;font:800 %(size)spx/.98 B;letter-spacing:-.035em}
-h1 em{font-style:normal;background:linear-gradient(180deg,#ff9a4d,#ec702e 60%%,#e4571f);-webkit-background-clip:text;color:transparent}
-.sub{position:absolute;left:64px;right:140px;bottom:92px;font:500 27px/1.35 F;color:rgba(255,255,255,.82)}
-.url{position:absolute;right:64px;bottom:88px;font:700 25px F;color:#c9b8ff}
-.tape{position:absolute;left:0;right:0;bottom:0;height:20px;background:repeating-linear-gradient(-45deg,#ec702e 0 22px,#17141f 22px 44px)}
-</style></head><body><div class="grid"></div>
+.brand{display:flex;align-items:center;gap:16px;font:800 34px B;letter-spacing:-.03em}
+.brand img{width:64px;height:64px;border-radius:50%%;border:3px solid #fff}
+.chip{font:800 18px F;letter-spacing:.14em;text-transform:uppercase;color:#16181d;background:#ec702e;padding:10px 18px;border-radius:4px;transform:rotate(-1.5deg)}
+h1{position:absolute;left:64px;right:90px;top:170px;font:800 %(size)spx/1.04 B;letter-spacing:-.04em}
+h1 em{font-style:normal;background:#ec702e;color:#16181d;padding:0 .12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.sub{position:absolute;left:64px;right:140px;bottom:96px;font:600 27px/1.35 F;color:rgba(255,255,255,.9)}
+.url{position:absolute;right:64px;bottom:92px;font:800 25px F;color:#ec702e}
+.tape{position:absolute;left:0;right:0;bottom:0;height:22px;background:repeating-linear-gradient(-45deg,#ec702e 0 22px,#16181d 22px 44px)}
+.edge{position:absolute;left:0;right:0;bottom:22px;height:4px;background:#16181d}
+</style></head><body>
 <div class="top"><div class="brand"><img src="file://%(logo)s">DigiTradie</div><div class="chip">%(chip)s</div></div>
-<h1>%(headline)s</h1><p class="sub">%(sub)s</p><div class="url">digitradie.com</div><div class="tape"></div></body></html>"""
+<h1>%(headline)s</h1><p class="sub">%(sub)s</p><div class="url">digitradie.com</div><div class="edge"></div><div class="tape"></div></body></html>"""
 
 CARDS = {
     "home": ("Fractional marketing", "We don&rsquo;t take <em>just any business.</em>", "Meta Ads, Google Ads, SEO and a dashboard you can read."),

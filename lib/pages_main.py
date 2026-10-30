@@ -23,34 +23,22 @@ def timeline(steps):
     return '<ol class="timeline">' + "".join(f"<li><h3>{t}</h3><p>{d}</p></li>" for t, d in steps) + "</ol>"
 
 
-ART = {
-    "google-ads": ("search", ("Conversion tracking", "Waste controlled", "Dashboard included")),
-    "meta-ads": ("megaphone", ("Offer first", "Tracked enquiries", "Dashboard included")),
-    "seo-website-optimisation": ("globe", ("Found on Google", "Fast on mobile", "Clear next steps")),
-    "audit-optimise": ("clipboard-check", ("Full account audit", "Fixes applied", "No lock-in")),
-    "ads-setup": ("rocket", ("Built properly", "Handed to you", "Coaching available")),
-    "fractional-marketer": ("handshake", ("Ongoing optimisation", "Regular check-ins", "Limited spots")),
-    "services": ("layout-dashboard", ("Meta Ads", "Google Ads", "SEO and website")),
-    "about": ("users", ("The person who pitched you", "Fewer clients", "Straight answers")),
-}
-
-
 # =========================================================== services hub
 def build_services_hub():
     cards = "".join(
         f'<a class="tile tile-svc reveal" href="/services/{s}"><span class="tile-ic">{icon(ic)}</span><h3>{t}</h3><p>{d}</p><span class="go">See how it works {icon("arrow-right")}</span></a>'
         for s, t, d, ic in SERVICES)
     together = feat_grid([
-        ("search", "Google catches demand", "People searching for what you sell already want it. Google Ads and local SEO put you in front of them at the moment they are looking."),
-        ("megaphone", "Meta creates demand", "People who are not searching yet can still be reached with the right offer on Facebook and Instagram, early enough that you are the one they remember."),
-        ("globe", "Your website closes the gap", "Traffic only pays off if the page turns it into an enquiry, so website optimisation and tracking sit behind every channel."),
+        ("search", "Google Ads and local SEO", "For people who are already searching for what you sell. You show up at the moment they want it."),
+        ("megaphone", "Meta Ads", "For people who are not searching yet. You put the right offer in front of them early, so you are the one they remember."),
+        ("globe", "Your website", "Traffic only pays off if the page turns it into an enquiry, so website work and tracking sit behind both."),
     ])
     main = "\n".join([
         c.page_hero(eyebrow="Services", h1="Marketing services for small business, <em>run by one accountable marketer.</em>",
                     lede="Meta Ads and Google Ads first, then SEO and website optimisation so the traffic you pay for turns into enquiries. Every engagement starts with a free fit check and includes a dashboard you can read.",
-                    crumbs=[("Home", "/"), ("Services", None)], actions=actions(where="services-hero"), visual=c.art(*ART["services"])),
-        f'<section class="section what"><div class="wrap">{c.section_head("What we do", "Three channels. One plan.", "Most small businesses do not need every channel at once. We pick the ones that suit how your customers buy.")}<div class="bento" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">{cards}</div></div></section>',
-        f'<section class="section"><div class="wrap">{c.section_head("How the channels work together", "Catch demand, create demand, convert it.", center=True)}{together}</div></section>',
+                    crumbs=[("Home", "/"), ("Services", None)], actions=actions(where="services-hero"), visual=c.plate("Services", [("Channels", "Meta Ads, Google Ads, SEO, website"), ("First step", "Free fit check, 15 to 20 minutes"), ("Every package", "Includes your dashboard"), ("Ad spend", "Paid to the platforms, separate from our fees")])),
+        f'<section class="section what"><div class="wrap">{c.section_head("Services", "What we offer", "Most small businesses do not need every channel at once. We pick the ones that suit how your customers buy.")}<div class="bento" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">{cards}</div></div></section>',
+        f'<section class="section"><div class="wrap">{c.section_head("How they fit together", "Who each channel is for", center=True)}{together}</div></section>',
         c.packages_section(heading="Pick how you want to work with us", eyebrow="Ways to work together"),
         c.faq_section(HOME_FAQS[:4], heading="Quick answers"),
         c.cta_band(),
@@ -72,13 +60,10 @@ def _service(slug, *, title, desc, eyebrow, h1, lede, when_h2, when_html, facts_
     main = "\n".join([
         c.page_hero(eyebrow=eyebrow, h1=h1, lede=lede, crumbs=[("Home", "/"), ("Services", "/services"), (svc_name, None)],
                     actions=actions(where=f"{slug}-hero", ghost=("See what is included", "#included")),
-                    visual=c.art(*ART[slug])),
-        f'''<section class="section"><div class="wrap split">
-  <div class="prose reveal"><h2>{when_h2}</h2>{when_html}</div>
-  <div class="reveal"><h2 class="sr-h" style="font-size:1.1rem;margin-bottom:12px">At a glance</h2>{facts(facts_rows)}</div>
-</div></section>''',
-        f'<section class="section what" id="included"><div class="wrap">{c.section_head("What we set up", setup_h2)}{feat_grid(setup_items)}</div></section>',
-        f'<section class="section"><div class="wrap"><div class="prose reveal"><h2>{expect_h2}</h2>{expect_html}</div></div></section>',
+                    visual=c.plate(svc_name, facts_rows)),
+        f'''<section class="section"><div class="wrap"><div class="prose"><h2>{when_h2}</h2>{when_html}</div></div></section>''',
+        f'<section class="section what" id="included"><div class="wrap">{c.section_head("Included", setup_h2)}{feat_grid(setup_items)}</div></section>',
+        f'<section class="section"><div class="wrap"><div class="prose"><h2>{expect_h2}</h2>{expect_html}</div></div></section>',
         c.faq_section(faqs, heading=f"{svc_name} questions"),
         c.related_cards(related, heading="Related reading"),
         c.packages_section(heading="Ways to work with us", eyebrow="Packages"),
@@ -102,7 +87,7 @@ def build_services():
 <p>Not sure which side of the line you sit on? That is the first thing we work out on your fit-check call.</p>""",
         facts_rows=[("Best for", "Urgent or high-intent work"), ("Customer is", "Already searching"), ("Speed", "Can start producing enquiries quickly"),
                     ("Ad spend", "Paid to Google, separate from our fees"), ("Pairs well with", "SEO and website optimisation")],
-        setup_h2="Built to show you which clicks become enquiries.",
+        setup_h2="What we set up",
         setup_items=[
             ("target", "Conversion tracking first", "Calls, forms and bookings are tracked from day one, so you see which clicks turn into enquiries and not just which ones cost money."),
             ("search", "Campaigns built around your services", "Tightly themed search campaigns for the work you actually want, matched to the words people type instead of a broad net."),
@@ -111,7 +96,7 @@ def build_services():
             ("file-text", "Ads and pages that match", "The ad, the landing page and the offer say the same thing, which is what lifts the enquiry rate."),
             ("gauge", "Budgets tuned to a cost per lead", "Budgets and bidding are set toward your target cost per lead and reviewed on a regular rhythm."),
         ],
-        expect_h2="What to expect, honestly",
+        expect_h2="What to expect",
         expect_html="""<p>The first weeks are about learning what works in your market. We watch the search terms that trigger your ads, trim the ones that waste money and put more behind the ones that produce enquiries.</p>
 <p>We will not promise a number of leads, because no honest marketer can before seeing your market, your offer and your website. What we do promise is that you can see what is happening in your dashboard, in plain English, and that you will hear about it from the person doing the work.</p>
 <div class="callout"><p><b>Paid ads do not change your organic rankings.</b> Google keeps the two separate. If you also want to show up for free, that is a job for <a href="/services/seo-website-optimisation">SEO and website optimisation</a>.</p></div>""",
@@ -138,7 +123,7 @@ def build_services():
 <p>If your customers are searching in the moment, such as a burst pipe or a flat battery, <a href="/services/google-ads">Google Ads</a> usually comes first. Many businesses end up running both, each doing its own job.</p>""",
         facts_rows=[("Best for", "Considered purchases and visual businesses"), ("Customer is", "Not yet searching"), ("Speed", "Improves as offers and creative are tested"),
                     ("Ad spend", "Paid to Meta, separate from our fees"), ("Pairs well with", "Google Ads for people ready to buy")],
-        setup_h2="The offer does the heavy lifting. We build around it.",
+        setup_h2="What we set up",
         setup_items=[
             ("megaphone", "An offer worth stopping for", "We shape the offer first, because it does more work than any targeting setting. It is the lesson behind our renovation case study."),
             ("target", "Tracking Meta can learn from", "Pixel and conversion setup so Meta optimises for real enquiries, not just clicks and likes."),
@@ -168,13 +153,13 @@ def build_services():
         eyebrow="SEO and website optimisation",
         h1="SEO and website optimisation that <em>earns free traffic</em> and turns visits into enquiries.",
         lede="Two jobs, one goal. First, be found when people search for what you do. Second, make sure the visitors you get turn into phone calls and form fills.",
-        when_h2="Why this sits behind every channel",
+        when_h2="Why your website matters to ads and SEO",
         when_html="""<p>Every dollar you spend on ads sends people to your website, and every free visitor from Google arrives there too. If the site is slow, confusing or hard to use on a phone, you pay for traffic that leaves.</p>
 <p>SEO works on the free side: your Google Business Profile, your reviews, your service pages and the technical basics. Website optimisation works on the conversion side: speed, clear calls to action and short forms.</p>
 <p>It is slower than ads, but it compounds. It also keeps working when the ad budget pauses.</p>""",
         facts_rows=[("Best for", "Local and service businesses wanting steady free traffic"), ("Customer is", "Searching, or about to"), ("Speed", "Builds over time"),
                     ("Cost per click", "None once it is working"), ("Pairs well with", "Google Ads while organic builds")],
-        setup_h2="The basics that decide who gets found.",
+        setup_h2="What we work on",
         setup_items=[
             ("map-pin", "Google Business Profile", "Fully built out with photos, service areas, hours and clear descriptions, because this is what shows up on maps."),
             ("star", "Reviews that say something useful", "A simple way to ask for reviews that mention the work and the suburb, which tells Google what you do and where you do it."),
@@ -183,7 +168,7 @@ def build_services():
             ("mouse-pointer-click", "Calls to action that convert", "Click-to-call buttons, short forms and a clear next step on every page."),
             ("layers", "Structure for search and AI answers", "Structured data and clear page layout so Google and AI assistants can understand what you do and quote you accurately."),
         ],
-        expect_h2="What to expect, honestly",
+        expect_h2="What to expect",
         expect_html="""<p>SEO is not a switch. Changes show up gradually, and the order of work matters: Google Business Profile and reviews first, because they move local results fastest, then the pages and technical work behind them.</p>
 <p>We will tell you what we changed, why, and what we are watching. We will not promise a ranking, because nobody can.</p>
 <div class="callout"><p><b>Paid ads do not improve organic rankings.</b> Google keeps them separate. If you want results while SEO builds, <a href="/services/google-ads">Google Ads</a> can cover the gap.</p></div>""",
@@ -205,18 +190,17 @@ def _package(slug, *, title, desc, eyebrow, h1, lede, included, facts_rows, step
     url = f"{SITE}/{slug}"
     service_node = {"@type": "Service", "@id": url + "#service", "name": meta[1], "url": url, "description": desc,
                     "provider": {"@id": f"{SITE}/#organization"}, "areaServed": {"@type": "Country", "name": "Australia"}}
-    inc = "".join(f'<li class="reveal">{icon("circle-check")}<span>{t}</span></li>' for t in included)
-    suit = "".join(f"<li>{icon('check')}{t}</li>" for t in suits)
+    inc = "".join(f'<li>{icon("circle-check")}<span>{t}</span></li>' for t in included)
+    suit = "".join(f"<li>{t}</li>" for t in suits)
     main = "\n".join([
         c.page_hero(eyebrow=eyebrow, h1=h1, lede=lede, crumbs=[("Home", "/"), (meta[1], None)],
-                    actions=actions(where=f"{slug}-hero", ghost=("What is included", "#included")), visual=c.art(*ART[slug])),
+                    actions=actions(where=f"{slug}-hero", ghost=("What is included", "#included")), visual=c.plate(meta[1], facts_rows)),
         f'''<section class="section" id="included"><div class="wrap split">
-  <div class="reveal"><p class="eyebrow">What is included</p><h2>{meta[1]}, in plain English.</h2><ul class="incl">{inc}</ul></div>
-  <div class="reveal">{facts(facts_rows)}</div>
+  <div><p class="eyebrow">Included</p><h2>What you get</h2><ul class="incl">{inc}</ul></div>
+  <div><p class="eyebrow">Who it suits</p><h2>{suits_h2}</h2><ul class="ticks ticks-dark">{suit}</ul>{extra_html}
+    <div class="callout"><p><b>Not sure it is the right one?</b> Book the free fit check. We will tell you which package fits, or whether you are better off doing something else first.</p></div></div>
 </div></section>''',
-        f'<section class="section what"><div class="wrap split"><div class="reveal">{c.section_head("The process", steps_h2)}</div><div class="reveal">{timeline(steps)}</div></div></section>',
-        f'<section class="section"><div class="wrap split"><div class="reveal"><p class="eyebrow">Who it suits</p><h2>{suits_h2}</h2><ul class="ticks ticks-dark">{suit}</ul>{extra_html}</div>'
-        f'<div class="reveal"><div class="callout"><p><b>Not sure it is the right one?</b> Book the free fit check. We will tell you which package fits, or whether you are better off doing something else first.</p></div></div></div></section>',
+        f'<section class="section what"><div class="wrap split"><div>{c.section_head("The process", steps_h2)}</div><div>{timeline(steps)}</div></div></section>',
         c.faq_section(faqs, heading=f"{meta[1]} questions"),
         c.packages_section(exclude=slug, heading="Compare the other packages", eyebrow="Other ways to work together", sub=""),
         c.cta_band(),
@@ -234,7 +218,7 @@ def build_packages():
         lede="A full audit of your Meta and Google Ads accounts: what is working, what is bleeding budget, and exactly what to fix. One call. No lock-in.",
         included=["A full account audit across Meta and Google", "Priority fixes applied, not just a report", "A plain-English dashboard so you can see it yourself", "A walkthrough of what changed and why", "No long-term contract"],
         facts_rows=[("Format", "Once-off"), ("Best for", "Businesses already running ads"), ("Channels", "Meta Ads and Google Ads"), ("Includes", "Dashboard"), ("Commitment", "None beyond the work"), ("Investment", "Confirmed on your fit-check call")],
-        steps_h2="From first call to fixed.",
+        steps_h2="How it works",
         steps=[("Fit check", "A short call to learn what you are running, what you are spending and what you want ads to do."),
                ("Audit", "We review tracking, campaign structure, targeting, budgets, creative, offers and landing pages across your accounts."),
                ("Fix", "We apply the priority fixes, so you get the benefit and not only a list."),
@@ -255,13 +239,13 @@ def build_packages():
         lede="We set up your Meta and Google Ads campaigns and a dashboard you can actually read, then hand it over. Add coaching if you want to learn the tools yourself.",
         included=["Campaigns and tracking built from scratch", "Set and forget handover, or keep us on", "The basics to manage it from your phone", "A plain-English dashboard", "Optional coaching add-on, per session"],
         facts_rows=[("Format", "Once-off"), ("Best for", "Launching, or starting over"), ("Channels", "Meta Ads and Google Ads"), ("Includes", "Dashboard"), ("Add-on", "Coaching sessions"), ("Investment", "Confirmed on your fit-check call")],
-        steps_h2="From blank account to handover.",
+        steps_h2="How it works",
         steps=[("Fit check", "A short call about your business, your offer, your goal and your budget."),
                ("Plan", "We agree what to run, where and why: channels, offer, targeting, budget and what counts as an enquiry."),
                ("Build", "Accounts, tracking, campaigns, creative direction and your dashboard, built so you can see what is happening."),
                ("Handover", "We walk you through it and teach the basics, so it runs without daily attention and you can check it from your phone."),
                ("Coaching or stay on", "Add coaching sessions to learn the tools, or move to the Fractional In-House Marketer package if you would rather we keep running it.")],
-        suits_h2="You want it built right, then you want to run it.",
+        suits_h2="You want it built right, then you run it.",
         suits=["You are launching ads for the first time", "Your current setup is a mess and you want a clean start", "You want to learn enough to handle the basics yourself", "You prefer a once-off cost to a monthly retainer"],
         faqs=[("What does set and forget actually mean?", "It means handed over in a state where it can run without daily attention, with a dashboard that shows when something needs a look. It does not mean no one ever checks it."),
               ("Can I learn to manage the ads myself?", "Yes. We teach the basics as part of the handover, and coaching sessions are available as an add-on if you want to go deeper."),
@@ -277,7 +261,7 @@ def build_packages():
         lede="Ongoing, hands-on management of your Meta and Google Ads, plus SEO and website optimisation. Reserved for businesses we can genuinely move the needle for, week to week. Limited spots.",
         included=["Ongoing optimisation, not a one-off", "Regular check-ins, so you always know what is happening", "Meta Ads, Google Ads, SEO and website optimisation", "A plain-English dashboard", "3-month minimum, then flexible"],
         facts_rows=[("Format", "Monthly, ongoing"), ("Best for", "Businesses wanting hands-on help"), ("Channels", "Meta, Google, SEO, website"), ("Includes", "Dashboard and check-ins"), ("Commitment", "3-month minimum, then flexible"), ("Investment", "Confirmed on your fit-check call")],
-        steps_h2="How an ongoing engagement runs.",
+        steps_h2="How it works",
         steps=[("Fit check", "We start with the free call, because spots are limited and we only take on businesses we can help."),
                ("Baseline", "We review what is running now and set the targets we will be measured against."),
                ("Run and optimise", "We manage campaigns, test offers and creative, and keep your site and search presence working harder."),
@@ -293,6 +277,10 @@ def build_packages():
 
 
 # =========================================================== company pages
+ABOUT_ROWS = [("Founder", "Kosta Diamantopoulos"), ("Works with", "Small and medium businesses across Australia"), ("Services", "Meta Ads, Google Ads, SEO, website optimisation"),
+              ("First step", "Free fit check, usually 15 to 20 minutes"), ("Contact", f'<a href="mailto:{EMAIL}">{EMAIL}</a><br><a href="tel:{PHONE_TEL}">{PHONE}</a>')]
+
+
 def build_about():
     principles = feat_grid([
         ("handshake", "A straight answer before a sale", "If we are not the right fit, we say so on the first call. It saves you money and saves us a bad engagement."),
@@ -303,14 +291,14 @@ def build_about():
     main = "\n".join([
         c.page_hero(eyebrow="About DigiTradie", h1="Meet Kosta. <em>He runs your account.</em>",
                     lede="DigiTradie is a fractional marketing service for small and medium businesses across Australia. When you book a fit check you speak to Kosta, and if we work together, you still do.",
-                    crumbs=[("Home", "/"), ("About", None)], actions=actions(where="about-hero", primary="Book a free fit check", ghost=("Read the case study", "/blog/renovation-leads-case-study")), visual=c.art(*ART["about"])),
+                    crumbs=[("Home", "/"), ("About", None)], actions=actions(where="about-hero", primary="Book a free fit check", ghost=("Read the case study", "/blog/renovation-leads-case-study")), visual=c.plate("About", ABOUT_ROWS)),
         c.founder_card(),
-        f'<section class="section what"><div class="wrap">{c.section_head("How we work", "Four rules we do not break.")}{principles}</div></section>',
-        f'''<section class="section"><div class="wrap split"><div class="prose reveal"><h2>Experience behind the work</h2>
+        f'<section class="section what"><div class="wrap">{c.section_head("Principles", "How we work")}{principles}</div></section>',
+        f'''<section class="section"><div class="wrap"><div class="prose"><h2>Experience behind the work</h2>
 <p>Kosta Diamantopoulos has worked across global ad agency networks, national telecom and fashion retail brands, and luxury hospitality campaigns, managing $100k+ monthly ad budgets on international accounts.</p>
 <p>The same approach has worked closer to home: $500 in ad spend turned into $75k+ profit for a single Melbourne renovation business, by changing the offer rather than cutting the price.</p>
 <p>That range is why DigiTradie works for a business spending $50 a day as well as one spending $5,000.</p></div>
-<div class="reveal">{facts([("Founder", "Kosta Diamantopoulos"), ("Works with", "Small and medium businesses across Australia"), ("Services", "Meta Ads, Google Ads, SEO, website optimisation"), ("First step", "Free fit check, usually 15 to 20 minutes"), ("Contact", f'<a href="mailto:{EMAIL}">{EMAIL}</a><br><a href="tel:{PHONE_TEL}">{PHONE}</a>')])}</div></div></section>''',
+</div></section>''',
         c.guides_grid(limit=12, heading="Industries we write for", sub="Free DIY guides for twelve industries, written for owners who want to run their own marketing first."),
         c.cta_band(),
     ])
@@ -356,7 +344,7 @@ def build_contact():
                     lede="One call. We&rsquo;ll tell you straight whether we can help, with no sales pitch and no pressure. If we&rsquo;re not the right fit for your business, we&rsquo;ll say so.",
                     crumbs=[("Home", "/"), ("Contact", None)]),
         f'''<section class="section"><div class="wrap split">
-  <div class="reveal"><p class="eyebrow">What happens next</p><h2>Simple, and no obligation.</h2>{steps}
+  <div class="reveal"><p class="eyebrow">What happens next</p><h2>How it goes</h2>{steps}
     <div class="callout"><p><b>Prefer to reach out directly?</b><br><a href="mailto:{EMAIL}" data-track="email">{EMAIL}</a><br><a href="tel:{PHONE_TEL}" data-track="phone">{PHONE}</a></p></div></div>
   <div class="reveal">{form("contact-form", source="contact-page", heading="Book your free fit check")}</div>
 </div></section>''',
@@ -378,7 +366,7 @@ gtag('event','generate_lead',{{method:'fit_check_form',currency:'AUD'}});{conv}}
         c.page_hero(eyebrow="Enquiry received", h1="Thanks. <em>We&rsquo;ve got it.</em>",
                     lede="Your fit-check request just landed in our inbox. We&rsquo;ll be in touch shortly to book your call.", crumbs=None),
         f'''<section class="section"><div class="wrap split">
-  <div class="reveal"><p class="eyebrow">What happens next</p><h2>Three steps.</h2>{steps}</div>
+  <div class="reveal"><p class="eyebrow">What happens next</p><h2>What we do now</h2>{steps}</div>
   <div class="reveal"><div class="callout"><p><b>While you wait,</b> have a look at how we work or read a couple of things we have learned running campaigns.</p></div>
   <div class="hero-actions"><a class="btn btn-primary" href="/#how">How it works</a><a class="btn btn-ghost" href="/blog/renovation-leads-case-study">Read the case study</a><a class="btn btn-ghost" href="/learn">Free guides</a></div></div>
 </div></section>{script}''',

@@ -28,7 +28,6 @@ def build_home():
     url = SITE + "/"
     main = "\n".join([
         c.home_hero(),
-        c.marquee(),
         c.stats_band(),
         c.services_bento(),
         c.fit_section(),

@@ -13,20 +13,19 @@ def crumbs_html(crumbs):
     return f'<nav class="crumbs" aria-label="Breadcrumb">{"".join(parts)}</nav>'
 
 
-def art(ic, chips=()):
-    """Decorative glass panel for inner-page heroes: a big icon plus up to three floating proof chips."""
-    cs = "".join(f'<span class="art-chip c{i + 1}">{icon("circle-check")}{esc(t)}</span>' for i, t in enumerate(chips[:3]))
-    return f'<div class="phero-art" aria-hidden="true"><div class="art-card">{icon(ic)}{cs}</div></div>'
+def plate(title, rows):
+    """Equipment-style spec plate for inner-page heroes. rows = [(label, value-html)]."""
+    inner = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rows)
+    return f'<aside class="plate" aria-label="{esc(title)} at a glance"><div class="plate-h"><span>{esc(title)}</span><span>At a glance</span></div><dl>{inner}</dl></aside>'
 
 
 def page_hero(*, eyebrow, h1, lede, crumbs=None, actions="", visual="", tone="dark"):
     cr = crumbs_html(crumbs) if crumbs else ""
     return f"""<section class="phero phero-{tone}">
-  <div class="phero-bg" aria-hidden="true"><span class="grid"></span><span class="sparks"></span></div>
   <div class="wrap phero-in{' has-art' if visual else ''}">
     <div class="phero-copy">
       {cr}
-      <p class="chip"><span class="dot"></span>{esc(eyebrow)}</p>
+      <p class="chip">{esc(eyebrow)}</p>
       <h1>{h1}</h1>
       {f'<p class="lede">{lede}</p>' if lede else ''}
       {actions}
@@ -47,25 +46,24 @@ def section_head(eyebrow, h2, sub="", center=False, dark=False):
 # ---------------------------------------------------------------- homepage hero
 def home_hero():
     return f"""<section class="hero" id="top">
-  <div class="phero-bg" aria-hidden="true"><span class="grid"></span><span class="sparks"></span></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="chip"><span class="dot"></span>Fractional marketing for small &amp; medium business</p>
-      <h1>We don&rsquo;t take <em>just any business.</em></h1>
-      <p class="lede">DigiTradie is a fractional in-house marketing service for small and medium businesses across Australia. We run your Meta Ads, Google Ads, SEO and website optimisation, and only take on businesses we can genuinely help launch, learn or optimise their ads. If we&rsquo;re not the right fit, we&rsquo;ll say so on the first call.</p>
+      <p class="chip">Fractional marketing for small &amp; medium business</p>
+      <h1>We don&rsquo;t take<br><em>just any business.</em></h1>
+      <p class="lede">DigiTradie is a fractional in-house marketing service for small and medium businesses across Australia. We run your Meta Ads, Google Ads, SEO and website, but only for businesses we can genuinely help. If we&rsquo;re not the right fit, we&rsquo;ll tell you on the first call.</p>
       <a class="btn btn-glow hero-cta-m" href="#contact" data-cta="hero-mobile">Book a free fit check {icon("arrow-right")}</a>
       <ul class="channels" aria-label="What we manage">
-        <li class="ch ch-1">{icon("megaphone")}Meta Ads</li>
-        <li class="ch ch-1">{icon("search")}Google Ads</li>
-        <li class="ch ch-2">{icon("globe")}SEO</li>
-        <li class="ch ch-2">{icon("layout-dashboard")}Website optimisation</li>
-        <li class="ch ch-3">{icon("target")}Full-funnel strategy</li>
+        <li class="ch ch-1">Meta Ads</li><li class="ch ch-1">Google Ads</li><li class="ch">SEO</li><li class="ch">Website optimisation</li>
       </ul>
       <ul class="ticks">
-        <li>{icon("check")}A dashboard you can check any time, even from your phone</li>
-        <li>{icon("check")}Set and forget for a once-off fee, or keep us on</li>
-        <li>{icon("check")}Learn the basics so you can run it yourself</li>
+        <li>A dashboard you can check any time, even from your phone</li>
+        <li>Set and forget for a once-off fee, or keep us on</li>
+        <li>Learn the basics so you can run it yourself</li>
       </ul>
+      <div class="owner">
+        <img src="/assets/img/kosta-160.webp" width="68" height="68" alt="Kosta Diamantopoulos">
+        <p><b>You deal with Kosta,</b> the person who runs your account. Never a junior.</p>
+      </div>
       <a class="proof" href="/blog/renovation-leads-case-study" data-cta="hero-proof">
         <span class="proof-num"><small>$500 ad spend</small><b>$75K+</b><small>profit</small></span>
         <span class="proof-bars" aria-hidden="true"><i style="--h:18%"></i><i style="--h:30%"></i><i style="--h:44%"></i><i style="--h:62%"></i><i style="--h:100%" class="top"></i></span>
@@ -73,6 +71,7 @@ def home_hero():
       </a>
     </div>
     <div class="hero-form" id="contact">
+      <div class="sticker" aria-hidden="true"><span>Free<b>15 min</b>fit check</span></div>
       {form("hero-form", source="home-hero")}
     </div>
   </div>
@@ -80,18 +79,12 @@ def home_hero():
 </section>"""
 
 
-def marquee():
-    items = ["Meta Ads", "Google Ads", "SEO", "Website optimisation", "Plain-English dashboards", "Coaching", "Set and forget handover", "Fractional marketing"]
-    row = "".join(f'<span>{icon("sparkles")}{t}</span>' for t in items)
-    return f'<div class="marquee" aria-hidden="true"><div class="marquee-track">{row}{row}</div></div>'
-
-
 # ---------------------------------------------------------------- proof + founder
 def stats_band():
     return f"""<section class="section stats">
   <div class="wrap">
     <div class="stat-grid">
-      <div class="stat reveal"><b data-count="100" data-prefix="$" data-suffix="k+">$100k+</b><p>monthly ad budgets managed on international accounts</p></div>
+      <div class="stat reveal"><b>$100k+</b><p>monthly ad budgets managed on international accounts</p></div>
       <div class="stat reveal"><b>$500 <span class="arr">&rarr;</span> $75k+</b><p>ad spend to profit for one Melbourne renovation business</p></div>
       <div class="stat reveal"><b>15&ndash;20<small> min</small></b><p>one fit-check call, then a straight answer on whether we can help</p></div>
     </div>
@@ -150,11 +143,11 @@ def how_section(dark=False):
         ("03", "handshake", "Hand over or stay on", "Run it yourself with the basics we show you, or keep us on as your fractional marketer."),
     ]
     cards = "".join(
-        f'<li class="step reveal"><span class="step-n">{n}</span><span class="step-ic">{icon(ic)}</span><h3>{t}</h3><p>{d}</p></li>'
+        f'<li class="step reveal"><span class="step-n">{n}</span><h3>{t}</h3><p>{d}</p></li>'
         for n, ic, t, d in steps)
     return f"""<section class="section how" id="how">
   <div class="wrap">
-    {section_head("How it works", "Three steps. No mystery.", "Every client starts with the same free call, so we can tell you where you actually stand.", center=True)}
+    {section_head("How it works", "How it works", "Every client starts with the same free call, so we can tell you where you actually stand.", center=True)}
     <ol class="steps">{cards}</ol>
   </div>
 </section>"""
@@ -167,7 +160,7 @@ def services_bento():
         for s, t, d, ic in SERVICES)
     return f"""<section class="section what" id="services">
   <div class="wrap">
-    {section_head("What we do", "Ads that get tracked. Websites that convert. Numbers you can read.", "Primarily Meta Ads and Google Ads, backed by SEO and website optimisation so the traffic you pay for turns into enquiries.")}
+    {section_head("What we do", "We run your ads, and fix the website they send people to.", "Mostly Meta Ads and Google Ads. SEO and website work come in where they help the ads pay off.")}
     <div class="bento">
       {svc}
       <a class="tile tile-wide tile-dash reveal" href="/#dashboard"><span class="tile-ic">{icon("layout-dashboard")}</span><h3>A dashboard in every package</h3><p>Leads, cost per lead and spend in plain English, on your phone, any time. No logging in to five platforms.</p>
@@ -181,35 +174,37 @@ def services_bento():
 # ---------------------------------------------------------------- dashboard preview
 def _chart():
     pts = [14, 18, 17, 24, 29, 27, 36, 41]
-    w, h, pad = 560, 190, 14
-    xs = [pad + i * (w - 2 * pad) / (len(pts) - 1) for i in range(len(pts))]
-    ys = [h - pad - (v / 48) * (h - 2 * pad) for v in pts]
-    line = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in zip(xs, ys))
-    area = line + f" L{xs[-1]:.1f},{h} L{xs[0]:.1f},{h} Z"
-    dots = "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{5 if i == len(pts) - 1 else 3}" class="{"d-last" if i == len(pts) - 1 else "d"}"/>' for i, (x, y) in enumerate(zip(xs, ys)))
-    grid = "".join(f'<line x1="0" x2="{w}" y1="{h - pad - k * (h - 2 * pad) / 4:.1f}" y2="{h - pad - k * (h - 2 * pad) / 4:.1f}"/>' for k in range(5))
-    return (f'<svg class="chart" viewBox="0 0 {w} {h}" role="img" aria-label="Sample chart of leads per week rising over eight weeks">'
-            f'<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a4d" stop-opacity=".55"/><stop offset="1" stop-color="#ff9a4d" stop-opacity="0"/></linearGradient></defs>'
-            f'<g class="cgrid">{grid}</g><path d="{area}" fill="url(#cg)"/><path d="{line}" class="cline" pathLength="1"/>{dots}</svg>')
+    w, h, base = 560, 200, 168
+    bw, gap = 50, 22
+    x0 = (w - (len(pts) * bw + (len(pts) - 1) * gap)) / 2
+    bars = ""
+    for i, v in enumerate(pts):
+        bh = v / 45 * (base - 24)
+        x = x0 + i * (bw + gap)
+        cls = "bar-top" if i == len(pts) - 1 else "bar-b"
+        bars += (f'<rect class="{cls}" x="{x:.1f}" y="{base - bh:.1f}" width="{bw}" height="{bh:.1f}"/>'
+                 f'<text x="{x + bw / 2:.1f}" y="{base - bh - 7:.1f}" text-anchor="middle">{v}</text>'
+                 f'<text x="{x + bw / 2:.1f}" y="{base + 20}" text-anchor="middle">Wk {i + 1}</text>')
+    return (f'<svg class="chart" viewBox="0 0 {w} {h}" role="img" aria-label="Sample bar chart of leads per week rising over eight weeks">'
+            f'<line class="base" x1="0" x2="{w}" y1="{base}" y2="{base}"/>{bars}</svg>')
 
 
 def dashboard_section():
     return f"""<section class="section dash" id="dashboard">
-  <div class="dash-bg" aria-hidden="true"><span class="grid"></span></div>
   <div class="wrap dash-grid">
     <div class="dash-copy reveal">
       <p class="eyebrow">Your dashboard</p>
       <h2>See what your ads are actually doing.</h2>
       <p>Every package comes with a plain-English dashboard you can open any time. No logins to five platforms, no guessing, no waiting for a monthly PDF.</p>
       <ul class="ticks">
-        <li>{icon("check")}Leads, cost per lead and spend on one screen</li>
-        <li>{icon("check")}A plain note on what changed and why</li>
-        <li>{icon("check")}Works on your phone</li>
+        <li>Leads, cost per lead and spend on one screen</li>
+        <li>A plain note on what changed and why</li>
+        <li>Works on your phone</li>
       </ul>
       <a class="btn btn-glow" href="/contact" data-cta="dash">Book a free fit check {icon("arrow-right")}</a>
     </div>
     <div class="dash-mock reveal" role="group" aria-label="Sample dashboard, illustrative data only">
-      <div class="win-bar"><i></i><i></i><i></i><span>Your dashboard &middot; this month</span><em>Sample data</em></div>
+      <div class="win-bar"><span>Your dashboard &middot; this month</span><em>Sample data</em></div>
       <div class="kpis">
         <div class="kpi"><span>Leads</span><b>41</b><small class="up">{icon("trending-up")} 18%</small></div>
         <div class="kpi"><span>Cost per lead</span><b>$38</b><small class="up">{icon("trending-down")} 22%</small></div>
@@ -231,8 +226,11 @@ def dashboard_section():
 def case_teaser():
     return f"""<section class="section case">
   <div class="wrap case-grid">
-    <a class="case-img reveal" href="/blog/renovation-leads-case-study" aria-label="Read the renovation leads case study">
-      <img src="/images/renovation-case-study-1200x630.jpg" width="1200" height="630" loading="lazy" alt="Case study graphic: $500 ad spend to $75K profit for a Melbourne renovation business">
+    <a class="case-poster" href="/blog/renovation-leads-case-study">
+      <span class="cp-row"><small>Ad spend</small><b>$500</b></span>
+      <span class="cp-arrow" aria-hidden="true">&darr;</span>
+      <span class="cp-row cp-big"><small>Profit</small><b>$75K+</b></span>
+      <span class="cp-foot">One Melbourne renovation business. One offer change.</span>
     </a>
     <div class="case-copy reveal">
       <p class="eyebrow">Case study</p>
@@ -256,7 +254,6 @@ def packages_section(exclude=None, heading="Packages", sub=None, eyebrow="Packag
         feat = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
         addon = '<p class="tier-addon">Coaching add-on available</p>' if slug == "ads-setup" else ""
         cards.append(f"""<a class="tier {cls} reveal" href="/{slug}">
-  <span class="tier-ic">{icon(ic)}</span>
   <p class="tier-tag">{tag}</p>
   <h3>{esc(name)}</h3>
   <p class="tier-desc">{desc}</p>
@@ -301,16 +298,16 @@ def faq_section(faqs, heading="Questions we get asked", eyebrow="FAQ", sub="", d
 
 def cta_band(heading="Let&rsquo;s find out if we&rsquo;re a fit.", sub="One call. We&rsquo;ll tell you straight whether we can help, even if the answer is &ldquo;not yet&rdquo;.", fid="cta-form", source="cta-band"):
     return f"""<section class="section cta" id="book">
-  <div class="cta-bg" aria-hidden="true"><span class="grid"></span><span class="tools"></span></div>
+  <div class="cta-bg" aria-hidden="true"><span class="tools"></span></div>
   <div class="wrap cta-grid">
     <div class="cta-copy reveal">
       <p class="eyebrow">Free fit check</p>
       <h2>{heading}</h2>
       <p>{sub}</p>
       <ul class="ticks">
-        <li>{icon("check")}One call, usually 15 to 20 minutes</li>
-        <li>{icon("check")}No obligation, no lock-in contracts</li>
-        <li>{icon("check")}A straight answer, even if it is &ldquo;not yet&rdquo;</li>
+        <li>One call, usually 15 to 20 minutes</li>
+        <li>No obligation, no lock-in contracts</li>
+        <li>A straight answer, even if it is &ldquo;not yet&rdquo;</li>
       </ul>
       <p class="cta-direct">Prefer to reach out directly? <a href="mailto:{EMAIL}" data-track="email">{EMAIL}</a> &middot; <a href="tel:{PHONE_TEL}" data-track="phone">{PHONE}</a></p>
     </div>
