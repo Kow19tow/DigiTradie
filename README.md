@@ -31,7 +31,7 @@ Do not hand-edit those files; edit the sources above.
 
 ## Tracking
 
-- GA4 `G-N0PS84JLP6` and Google Ads `AW-18469638617` load after the page is interactive (see `GTAG_LOADER` in `lib/core.py`).
+- GA4 `G-N0PS84JLP6` loads after the page is interactive on every page. The Google Ads tag `AW-18469638617` loads only for visitors who arrived from an ad (gclid/gbraid/wbraid) and on `/thank-you`, which keeps organic visits fast and cookie-free (see `GTAG_LOADER` in `lib/core.py`).
 - Events sent: `form_start`, `form_step_complete`, `form_submit`, `cta_click`, `phone_click`, `email_click`, and `generate_lead` on `/thank-you`.
 - To count Google Ads conversions, create a conversion action in Google Ads, copy its label and paste it into `ADS_CONVERSION_LABEL` in `lib/core.py`, then rebuild.
 - Each form submission carries utm_*, gclid, landing page and referrer, so the email from Formspree shows which ad or search produced the lead.

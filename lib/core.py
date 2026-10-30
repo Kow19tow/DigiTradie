@@ -125,7 +125,10 @@ def init_assets():
 # ---------------------------------------------------------------- <head>
 GTAG_LOADER = f"""<script>
 window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}
-gtag('js',new Date());gtag('config','{GA}');gtag('config','{AW}');
+gtag('js',new Date());gtag('config','{GA}');
+var ad=/[?&](gclid|gbraid|wbraid)=/.test(location.search)||location.pathname==='/thank-you';
+try{{if(/[?&](gclid|gbraid|wbraid)=/.test(location.search))sessionStorage.setItem('dt_ad','1');ad=ad||!!sessionStorage.getItem('dt_ad')}}catch(e){{}}
+if(ad)gtag('config','{AW}');
 (function(){{var d=0;function l(){{if(d)return;d=1;var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id={GA}';document.head.appendChild(s)}}
 ['pointerdown','keydown','scroll','touchstart'].forEach(function(e){{addEventListener(e,l,{{once:true,passive:true}})}});
 window.dtLoadGtag=l;addEventListener('load',function(){{setTimeout(l,2500)}})}})();
