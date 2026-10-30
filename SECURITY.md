@@ -13,7 +13,7 @@ Status: **Fixed** = changed in this repo. **OK** = already safe, verified. **N/A
 | 1 | Exposed database credentials | N/A / OK | No database. Working tree and full git history scanned: no credentials. |
 | 2 | Public .env files | OK | None exist. `.vercelignore` blocks build files; live probes of `/.env`, `/.git/config` return 404. |
 | 3 | Hardcoded API keys | OK | Only public IDs ship (GA4 `G-…`, Ads `AW-…`, Formspree form ID), which are public by design. No secret keys anywhere. |
-| 4 | Weak or missing authentication | N/A | No logins. **Action:** turn on 2-step verification for GitHub, Vercel, Google, Formspree and Squarespace. |
+| 4 | Weak or missing authentication | N/A | No logins on the site. GitHub already uses 2-step verification (it asks for phone approval on sensitive changes). **Action:** confirm the same on Vercel, Google, Formspree and Squarespace. |
 | 5 | No authorization checks | N/A | No protected data. |
 | 6 | Users can reach other users' data | N/A | No user accounts. |
 | 7 | Open database read/write | N/A | No database. |
@@ -22,7 +22,7 @@ Status: **Fixed** = changed in this repo. **OK** = already safe, verified. **N/A
 | 10 | Debug pages in production | Fixed | Social-post sources, build scripts and docs were publicly reachable; now excluded from deploys. |
 | 11 | Build logs leaking secrets | OK | The build uses no secrets or environment variables. |
 | 12 | Verbose error messages | OK | Static pages and a plain custom 404. No stack traces exist. |
-| 13 | Leaked GitHub repos / commit history | OK | History scanned clean. Repo visibility is an **Action** item (see below). |
+| 13 | Leaked GitHub repos / commit history | OK | History scanned clean. GitHub secret scanning and push protection are on (blocks accidental key commits). The repo is public; see the optional private-repo note below. |
 | 14 | Secrets in frontend JavaScript | OK | `src/site.js` holds no keys. |
 | 15 | Client-side-only security checks | OK | Form checks are convenience only; Formspree validates server-side. Nothing is gated in the browser. |
 | 16 | Missing input validation | Fixed | Length limits, phone and email formats, honeypot field, URL tracking values cleaned to a safe character set. |
@@ -46,7 +46,8 @@ Status: **Fixed** = changed in this repo. **OK** = already safe, verified. **N/A
 | 34 | API trusts user-controlled IDs/roles | N/A | No API. |
 | 35 | Logs with tokens, emails, passwords | OK | Analytics events carry no name, email or phone. Form details only go to Formspree and your inbox. |
 | 36 | Source maps in production | OK | None generated; live probe returns 404. |
-| 37 | Dependency vulnerabilities | OK | Zero runtime dependencies (no npm packages or CDN libraries; fonts and icons are self-hosted). Build tools pinned in `requirements.txt` and watched by Dependabot. |
+| 37 | Dependency vulnerabilities | Fixed | GitHub dependency graph, Dependabot alerts and security updates are on. |
+| 37b | (detail) | OK | Zero runtime dependencies (no npm packages or CDN libraries; fonts and icons are self-hosted). Build tools pinned in `requirements.txt` and watched by Dependabot. |
 | 38 | Outdated packages | OK | Dependabot checks weekly (pip and GitHub Actions). |
 | 39 | Prompt injection in AI features | N/A | The site has no AI features. |
 | 40 | AI actions without permission checks | N/A | None. |
@@ -76,10 +77,22 @@ Everything needed to rebuild the site is in this repository.
    - `CNAME` www to `cname.vercel-dns.com`; apex `A` to Vercel's address shown in the Vercel domain settings
 5. **Leads:** Formspree keeps submissions; turn on email forwarding there as well.
 
-## Account settings to check (cannot be done from code)
+## Done in the dashboards (30 Oct 2026)
 
-- 2-step verification on GitHub, Vercel, Google (Workspace, Ads, Analytics), Formspree, Squarespace Domains.
-- GitHub: secret scanning and push protection on; consider making the repository private (Vercel keeps deploying private repos).
-- Formspree: allowed domains set to `www.digitradie.com`; spam filter / reCAPTCHA on.
-- Google Ads and GA4: automatic form-data collection and automatic enhanced conversions off (otherwise the form's email and phone would be hashed and sent to Google).
-- Google Workspace: set up DKIM signing (Admin console, Apps, Gmail, Authenticate email) to complement SPF and DMARC.
+- GitHub: dependency graph, Dependabot alerts, Dependabot security updates, secret scanning and push protection switched on. Stale `redesign` branch deleted.
+- GA4: Google signals off and user-provided data collection off (so no form emails or phone numbers can reach Google); the automatic "Form interactions" event turned off (the site sends its own `fitcheck_*` events instead).
+- Search Console: property verified through the GA4 tag and the sitemap submitted.
+
+## Still needs you (these need your login, password or phone approval)
+
+1. **GitHub ruleset for `main`** (blocks force-pushes and deleting `main`): GitHub asks for phone approval on this change. Settings, Rules, Rulesets, New branch ruleset, name it "Protect main", set Enforcement to Active, Add target, Include default branch, leave "Restrict deletions" and "Block force pushes" ticked, Create, approve on your phone.
+2. **Formspree** (formspree.io, form `xeaokqng`, Settings): set Allowed Domains to `www.digitradie.com` and turn on the spam filter or reCAPTCHA. Turn on 2-step verification in your account.
+3. **Google Workspace DKIM**: Admin console, Apps, Google Workspace, Gmail, Authenticate email, generate the record for digitradie.com, add the TXT record at Squarespace Domains, then Start authentication. (SPF and DMARC are already in place.)
+4. **Two Dependabot pull requests** propose newer minimum versions of `pillow` and `python-docx`. Your Mac runs Python 3.9, so close those two (or upgrade Python first). The two GitHub Actions bumps (`checkout`, `upload-artifact`) are safe to merge.
+5. **Old `learn-section` branch** on GitHub is fully merged and can be deleted (Branches page).
+6. Optional: GitHub Settings, General, Danger Zone, "Change visibility" to Private. Vercel keeps deploying private repos, but check the next deploy works. It would stop the internal "Tone of voice" section of the guides docx being publicly browsable.
+
+## Other account settings to check
+
+- 2-step verification on Vercel, Google (Workspace, Ads, Analytics), Formspree and Squarespace Domains.
+- Google Ads: when you create the conversion action, leave "enhanced conversions" off unless you want hashed form data sent to Google.
