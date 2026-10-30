@@ -1,26 +1,33 @@
 #!/usr/bin/env python3
 """
-Regenerates the /learn/ section of digitradie.com from
-content/learn/DigiTradie Industry Guides.docx.
+Rebuilds the whole digitradie.com website. One command:
 
-The Word doc is the single source of truth. To update a guide:
-  1. Edit content/learn/DigiTradie Industry Guides.docx
-  2. Run: python3 build.py
-  3. Check the changed files with `git status`, then commit and push.
+    python3 build.py
 
-Doc structure this script expects, per industry:
+What it builds (all output is plain static files that Vercel serves):
+  - every page: home, services, packages, about, faq, contact, thank-you, privacy, 404
+  - /blog  (posts live in content/blog/*.html + content/blog/posts.json)
+  - /learn (guides come from content/learn/DigiTradie Industry Guides.docx, the single source of truth)
+  - assets/site.<hash>.css and .js (from src/), share images in /og, sitemap.xml, robots.txt,
+    llms.txt, llms-full.txt, feed.xml, vercel.json, .vercelignore
+
+To update copy:
+  - Learn guides: edit the .docx, run `python3 build.py`.
+  - Blog posts: edit content/blog/<slug>.html, run `python3 build.py`.
+  - Design: edit src/site.css or src/site.js, run `python3 build.py`.
+  - Shared parts (header, footer, form, schema): lib/core.py and lib/components.py.
+Then check `git status`, commit and push. Vercel deploys from main.
+
+Doc structure the guides parser expects, per industry:
   Heading 2 "How to market a <industry>"  - starts a guide
     Normal                                - intro paragraph (lede + meta description)
     Heading 3 <section>                   - a subsection (varies per guide)
-      Normal / List Paragraph             - body text or bullets.
-                                             Lines starting with "☐" -> a task list.
-    Heading 3 "FAQs"                      - alternating Normal paragraphs:
-                                             question, answer, question, answer...
-                                             Rendered as an accordion and used for
-                                             the FAQPage schema.
+      Normal / List Paragraph             - body text or bullets. Lines starting with the tick-box
+                                             character become a task list.
+    Heading 3 "FAQs"                      - alternating Normal paragraphs: question, answer, ...
   Heading 2 "Tone of voice" is internal writing guidance and is never published.
 
-Requires: pip3 install --user python-docx
+Requires: pip3 install --user python-docx pillow   (and Google Chrome, used to draw the share images)
 """
 
 import json
@@ -32,11 +39,12 @@ from pathlib import Path
 try:
     import docx
 except ImportError:
-    sys.exit("Missing dependency. Run: pip3 install --user python-docx")
+    sys.exit("Missing dependency. Run: pip3 install --user python-docx pillow")
 
 REPO_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(REPO_ROOT))
 DOCX_PATH = REPO_ROOT / "content" / "learn" / "DigiTradie Industry Guides.docx"
-SITE_URL = "https://digitradie.com"
+
 
 # Explicit slug + display-name map, so URLs stay stable even if the doc's
 # wording changes slightly. Add a new tuple here when a new industry is
@@ -78,73 +86,6 @@ HEADLINE_OVERRIDES = {
 }
 
 # Optional per-guide image (hero + og:image + schema image), keyed by slug.
-# Files live in /images and are produced by social/export_web.py. Guides not listed use the default og-image.png.
-GUIDE_IMAGES = {
-    "tradie-marketing": (
-        "urgent-vs-considered-1200x630.jpg",
-        "Urgency decides the channel: urgent tradie jobs go Google first, considered jobs go social first. DigiTradie DIY guide.",
-    ),
-}
-
-GTAG = """<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0PS84JLP6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-N0PS84JLP6');
-  gtag('config', 'AW-18469638617');
-</script>"""
-
-FONT_LINK = (
-    '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-    '<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800'
-    '&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">\n'
-    '<link rel="stylesheet" href="/styles.css" />'
-)
-
-HEADER = """<header class="site-header">
-  <div class="wrap">
-    <a class="logo" href="/">
-      <img src="/logo.png" alt="DigiTradie logo" />
-      <span>DigiTradie</span>
-    </a>
-    <nav>
-      <a href="/#how">How it works</a>
-      <a href="/#packages">Packages</a>
-      <a href="/blog">Blog</a>
-      <a href="/contact">Contact</a>
-    </nav>
-    {learn_dropdown}
-    <a class="btn btn-primary btn-sm" href="/contact">Book a fit check</a>
-  </div>
-</header>"""
-
-FOOTER = """<footer class="site-footer">
-  <div class="wrap footer-nav">
-    <a href="/">Home</a>
-    <a href="/audit-optimise">Audit &amp; Optimise</a>
-    <a href="/ads-setup">Dashboard + Ads Setup</a>
-    <a href="/fractional-marketer">Fractional In-House Marketer</a>
-    <a href="/blog">Blog</a>
-    <a href="/learn">Learn</a>
-    <a href="/contact">Contact</a>
-  </div>
-  <div class="wrap">
-    <span>&copy; <span id="year"></span> DigiTradie</span>
-    <span class="footer-contact">
-      <a href="mailto:digitradieau@gmail.com">digitradieau@gmail.com</a>
-      <a href="tel:0409025904">0409 025 904</a>
-    </span>
-  </div>
-</footer>
-
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-</script>"""
-
 
 def headline_case(text):
     words = text.split(" ")
@@ -169,8 +110,11 @@ def industry_slug_and_label(h2_title):
     return slug, headline_case(t)
 
 
-def esc(s):
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def tidy(text):
+    """House style: no em dashes. Spaced dashes become commas (the doc is never edited)."""
+    return re.sub(r"\s+[\u2014\u2013]\s+", ", ", text).replace("\u2014", ", ")
 
 
 def parse_docx(path):
@@ -272,342 +216,50 @@ def parse_docx_full(path):
     return guides, doc_date
 
 
-def render_section(section):
-    heading = f'      <h2>{esc(section["heading"])}</h2>\n'
-    body = []
-    items = section["items"]
-    i = 0
-    while i < len(items):
-        item = items[i]
-        if item["kind"] in ("li", "task"):
-            cls = ' class="tasklist"' if item["kind"] == "task" else ""
-            body.append(f"      <ul{cls}>\n")
-            while i < len(items) and items[i]["kind"] == item["kind"]:
-                body.append(f'        <li>{esc(items[i]["text"])}</li>\n')
-                i += 1
-            body.append("      </ul>\n")
-        else:
-            body.append(f'      <p>{esc(item["text"])}</p>\n')
-            i += 1
-    return heading + "".join(body)
-
-
-def render_faqs(faqs):
-    if not faqs:
-        return ""
-    items = "\n".join(
-        f'''        <details class="faq-item">
-          <summary>{esc(f["q"])}</summary>
-          <p>{esc(f["a"])}</p>
-        </details>'''
-        for f in faqs
-    )
-    return f'''      <h2>FAQs</h2>
-      <div class="faq-list">
-{items}
-      </div>
-'''
-
-
-def faq_ld(faqs):
-    entities = [
-        {"@type": "Question", "name": f["q"], "acceptedAnswer": {"@type": "Answer", "text": f["a"]}}
-        for f in faqs
-    ]
-    return {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": entities}
-
-
-def learn_dropdown_html(all_guides):
-    items = "\n".join(
-        f'          <li><a href="/learn/{g["slug"]}">{esc(g["label"])}</a></li>' for g in all_guides
-    )
-    return f"""<details class="nav-dropdown">
-      <summary><span class="lbl-full">Market Your Industry</span><span class="lbl-short">Guides</span> <span aria-hidden="true">&#9662;</span></summary>
-      <div class="nav-dropdown-panel">
-        <p class="nav-dropdown-label">DIY Marketing For Your Industry</p>
-        <ul class="nav-dropdown-menu">
-{items}
-          <li><a href="/learn" class="nav-dropdown-viewall">View all guides &rarr;</a></li>
-        </ul>
-      </div>
-    </details>"""
-
-
-def render_guide_page(guide, all_guides, doc_date):
-    url = f"{SITE_URL}/learn/{guide['slug']}"
-    title = f"{guide['title']} | DigiTradie"
-    intro = guide["intro"] or ""
-    meta_desc = intro[:155].rsplit(" ", 1)[0] + "…" if len(intro) > 155 else intro
-
-    body_sections = "\n".join(render_section(s) for s in guide["sections"])
-    faq_html = render_faqs(guide["faqs"])
-
-    img_file, img_alt = GUIDE_IMAGES.get(guide["slug"], (None, None))
-    og_image = f"{SITE_URL}/images/{img_file}" if img_file else f"{SITE_URL}/og-image.png"
-    hero_html = (
-        f'      <img class="article-hero" src="/images/{img_file}" width="1200" height="630"\n'
-        f'           alt="{esc(img_alt)}" />\n'
-        if img_file else ""
-    )
-
-    other_guides = [g for g in all_guides if g["slug"] != guide["slug"]][:3]
-    related = "\n".join(
-        f'''        <a class="blog-card" href="/learn/{g["slug"]}">
-          <p class="blog-card-tag">DIY Guide</p>
-          <h3>{esc(g["label"])}</h3>
-          <p>{esc((g["intro"] or "")[:100])}…</p>
-        </a>'''
-        for g in other_guides
-    )
-
-    article_ld = {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": guide["title"],
-        "description": meta_desc,
-        "author": {"@type": "Person", "name": "Kosta Diamantopoulos"},
-        "publisher": {"@type": "Organization", "name": "DigiTradie", "logo": f"{SITE_URL}/logo.png"},
-        "datePublished": doc_date or datetime.now().strftime("%Y-%m-%d"),
-        "mainEntityOfPage": url,
-    }
-    if img_file:
-        article_ld["image"] = og_image
-    breadcrumb_ld = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Learn", "item": SITE_URL + "/learn"},
-            {"@type": "ListItem", "position": 3, "name": guide["title"], "item": url},
-        ],
-    }
-
-    ld_blocks = [article_ld, breadcrumb_ld]
-    if guide["faqs"]:
-        ld_blocks.append(faq_ld(guide["faqs"]))
-    ld_scripts = "\n".join(
-        f"<script type=\"application/ld+json\">\n{json.dumps(b, indent=2)}\n</script>" for b in ld_blocks
-    )
-
-    return f"""<!DOCTYPE html>
-<html lang="en-AU">
-<head>
-{GTAG}
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{esc(title)}</title>
-<meta name="description" content="{esc(meta_desc)}" />
-<link rel="canonical" href="{url}" />
-
-<link rel="icon" type="image/png" href="/favicon.png" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<meta name="theme-color" content="#C2410C" />
-
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="DigiTradie" />
-<meta property="og:title" content="{esc(guide['title'])}" />
-<meta property="og:description" content="{esc(meta_desc)}" />
-<meta property="og:url" content="{url}" />
-<meta property="og:image" content="{og_image}" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="{esc(guide['title'])}" />
-<meta name="twitter:description" content="{esc(meta_desc)}" />
-<meta name="twitter:image" content="{og_image}" />
-
-{FONT_LINK}
-
-{ld_scripts}
-</head>
-<body>
-
-{HEADER.format(learn_dropdown=learn_dropdown_html(all_guides))}
-
-<main>
-  <nav class="breadcrumb wrap" aria-label="Breadcrumb">
-    <a href="/">Home</a> <span aria-hidden="true">/</span>
-    <a href="/learn">Learn</a> <span aria-hidden="true">/</span>
-    <span aria-current="page">{esc(guide['title'])}</span>
-  </nav>
-
-  <section class="article-meta">
-    <div class="wrap article-wrap">
-      <p class="eyebrow">DIY Guide</p>
-      <h1>{esc(guide['title'])}</h1>
-      <p class="lede">{esc(intro)}</p>
-    </div>
-  </section>
-
-  <section class="article-body">
-    <div class="wrap article-wrap">
-{hero_html}{body_sections}
-{faq_html}
-    </div>
-  </section>
-
-  <section class="cta-band">
-    <div class="wrap cta-band-inner">
-      <h2>Want us to just handle this for you?</h2>
-      <a class="btn btn-light" href="/contact">Book a fit check</a>
-    </div>
-  </section>
-
-  <div class="wrap">
-    <a class="back-to-blog" href="/learn">&larr; Back to all guides</a>
-  </div>
-
-  <section class="blog-related">
-    <div class="wrap">
-      <h2>More guides</h2>
-      <div class="blog-grid">
-{related}
-      </div>
-    </div>
-  </section>
-</main>
-
-{FOOTER}
-
-</body>
-</html>
-"""
-
-
-def render_hub_page(all_guides):
-    cards = "\n".join(
-        f'''      <a class="blog-card" href="/learn/{g["slug"]}">
-        <p class="blog-card-tag">DIY Guide</p>
-        <h3>{esc(g["label"])}</h3>
-        <p>{esc((g["intro"] or "")[:140])}{"…" if len(g["intro"] or "") > 140 else ""}</p>
-      </a>'''
-        for g in all_guides
-    )
-    url = f"{SITE_URL}/learn"
-    title = "Learn: DIY Marketing For Your Industry | DigiTradie"
-    desc = (
-        "Straight-talking, industry-specific marketing guides for tradies and small business "
-        "owners who want to run their own ads first."
-    )
-
-    return f"""<!DOCTYPE html>
-<html lang="en-AU">
-<head>
-{GTAG}
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{esc(title)}</title>
-<meta name="description" content="{esc(desc)}" />
-<link rel="canonical" href="{url}" />
-
-<link rel="icon" type="image/png" href="/favicon.png" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<meta name="theme-color" content="#C2410C" />
-
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="DigiTradie" />
-<meta property="og:title" content="{esc(title)}" />
-<meta property="og:description" content="{esc(desc)}" />
-<meta property="og:url" content="{url}" />
-<meta property="og:image" content="{SITE_URL}/og-image.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="{esc(title)}" />
-<meta name="twitter:description" content="{esc(desc)}" />
-<meta name="twitter:image" content="{SITE_URL}/og-image.png" />
-
-{FONT_LINK}
-</head>
-<body>
-
-{HEADER.format(learn_dropdown=learn_dropdown_html(all_guides))}
-
-<main>
-  <section class="blog-hero">
-    <div class="wrap">
-      <p class="eyebrow">Learn</p>
-      <h1>DIY Marketing For Your Industry</h1>
-      <p class="lede">
-        Straight-talking guides for tradies and small business owners who want to run their own
-        marketing first, and know when it's time to hand it to someone else.
-      </p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap blog-grid">
-{cards}
-    </div>
-  </section>
-</main>
-
-{FOOTER}
-
-</body>
-</html>
-"""
-
-
-def merge_sitemap(all_guides):
-    sitemap_path = REPO_ROOT / "sitemap.xml"
-    text = sitemap_path.read_text()
-    text = re.sub(
-        r"\s*<url>\s*<loc>https://digitradie\.com/learn[^<]*</loc>.*?</url>",
-        "",
-        text,
-        flags=re.S,
-    )
-    entries = [f'''  <url>
-    <loc>{SITE_URL}/learn</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>''']
-    for g in all_guides:
-        entries.append(f'''  <url>
-    <loc>{SITE_URL}/learn/{g["slug"]}</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>''')
-    text = text.replace("</urlset>", "\n".join(entries) + "\n</urlset>")
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    sitemap_path.write_text(text)
-
 
 def main():
+    from lib import core, og, pages_content, pages_home, pages_main, seo_files
+
     if not DOCX_PATH.exists():
         sys.exit(f"Source doc not found: {DOCX_PATH}")
-
     guides, doc_date = parse_docx_full(DOCX_PATH)
     if not guides:
-        sys.exit("No guides found in the doc — check the Heading 2 structure.")
+        sys.exit("No guides found in the doc: check the Heading 2 structure.")
+    for g in guides:  # house style pass (no em dashes) without touching the source doc
+        g["title"] = tidy(g["title"])
+        g["intro"] = tidy(g["intro"] or "")
+        for s in g["sections"]:
+            s["heading"] = tidy(s["heading"])
+            for it in s["items"]:
+                it["text"] = tidy(it["text"])
+        for f in g["faqs"]:
+            f["q"], f["a"] = tidy(f["q"]), tidy(f["a"])
 
-    written = []
-    learn_dir = REPO_ROOT / "learn"
-    learn_dir.mkdir(exist_ok=True)
+    core.init_assets()
+    pages_home.build_home()
+    pages_main.build_services_hub()
+    pages_main.build_services()
+    pages_main.build_packages()
+    pages_main.build_about()
+    pages_main.build_faq()
+    pages_main.build_contact()
+    pages_main.build_thanks()
+    pages_main.build_privacy()
+    pages_main.build_404()
+    pages_content.build_blog()
+    pages_content.build_learn(guides, doc_date)
 
-    hub_path = learn_dir / "index.html"
-    hub_path.write_text(render_hub_page(guides))
-    written.append(str(hub_path.relative_to(REPO_ROOT)))
+    posts = json.loads((REPO_ROOT / "content" / "blog" / "posts.json").read_text())
+    og.add_guides(guides)
+    made = og.build_all()
+    seo_files.write_sitemap()
+    seo_files.write_robots()
+    seo_files.write_llms(guides, posts)
+    seo_files.write_feed(posts)
+    seo_files.write_hosting()
 
-    for g in guides:
-        guide_dir = learn_dir / g["slug"]
-        guide_dir.mkdir(exist_ok=True)
-        page_path = guide_dir / "index.html"
-        page_path.write_text(render_guide_page(g, guides, doc_date))
-        written.append(str(page_path.relative_to(REPO_ROOT)))
-
-    merge_sitemap(guides)
-    written.append("sitemap.xml")
-
-    print(f"Parsed {len(guides)} guides from the doc:")
-    for g in guides:
-        print(f"  - {g['title']}  ->  /learn/{g['slug']}  ({len(g['faqs'])} FAQs)")
-    print(f"\nWrote {len(written)} files:")
-    for w in written:
-        print(f"  - {w}")
+    print(f"Built {len(core.REGISTRY)} indexable pages, {len(guides)} guides, {len(posts)} blog posts, {made} new share images.")
+    print(f"CSS {core.ASSET_CSS}  JS {core.ASSET_JS}")
 
 
 if __name__ == "__main__":

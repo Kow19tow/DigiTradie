@@ -1,53 +1,44 @@
-# DigiTradie
+# DigiTradie website
 
-Landing page — plain HTML/CSS, no build step, deploys to Vercel as-is.
+Static site, deployed on Vercel from the `main` branch of this repo. Domain: https://www.digitradie.com
 
-## Deploy
+## Change something
 
-1. Push this repo to GitHub.
-2. In Vercel: New Project → import the GitHub repo → deploy (no config needed, it's a static site).
-3. In Squarespace DNS, remove only the **Squarespace Defaults** A records and `www` CNAME, then add the A/CNAME records Vercel gives you. Leave MX records alone — that's what runs Google Workspace email.
+Everything is rebuilt by one command:
 
-## Updating the /learn guides
+```bash
+python3 build.py
+```
 
-The `/learn` section (the DIY marketing guides, one per industry) is generated from a Word
-document — you never hand-edit the guide HTML directly.
+Then check `git status`, commit and push. Vercel deploys `main` automatically.
 
-**Source of truth:** `content/learn/DigiTradie Industry Guides.docx`
+| I want to change | Edit this | Then |
+|---|---|---|
+| A /learn guide | `content/learn/DigiTradie Industry Guides.docx` | `python3 build.py` |
+| A blog post | `content/blog/<slug>.html` (text) and `content/blog/posts.json` (title, description, date) | `python3 build.py` |
+| Homepage copy, FAQs | `lib/pages_home.py`, `lib/components.py` | `python3 build.py` |
+| Service, package, about, FAQ, contact, privacy pages | `lib/pages_main.py` | `python3 build.py` |
+| Header, footer, lead form, schema, tracking | `lib/core.py` | `python3 build.py` |
+| Colours, fonts, layout | `src/site.css` | `python3 build.py` |
+| Site behaviour (menu, form steps, events) | `src/site.js` | `python3 build.py` |
 
-**To update a guide, or add a new industry:**
+Needs: Python 3, `pip3 install --user python-docx pillow`, and Google Chrome (draws the share images).
 
-1. Open `content/learn/DigiTradie Industry Guides.docx` and edit it. Keep the existing structure:
-   - `Heading 2` starts a new guide — must say "How to market a &lt;industry&gt;" for the page
-     title to generate correctly.
-   - `Heading 3` starts a subsection within that guide.
-   - A `Heading 3` titled exactly **FAQs** is special — write it as alternating plain paragraphs:
-     question, answer, question, answer. These become the on-page accordion and the FAQ schema
-     Google reads.
-   - Bullet points use Word's normal bullet list style.
-   - Lines starting with a checkbox character (☐) become the "Do this week" task list.
-   - Adding a brand-new industry: just add a new `Heading 2` section following the same pattern.
-     It'll get a generic URL slug automatically — open `build.py` and add it to `INDUSTRY_MAP` near
-     the top if you want a specific URL slug or a shorter menu label instead.
+## What the build writes
 
-2. Regenerate the pages:
+`index.html` and every page folder, `404.html`, `assets/site.<hash>.css|js` (cache-busted automatically), `og/*.jpg` (share image per page), `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt`, `feed.xml`, `vercel.json`, `.vercelignore`.
+Do not hand-edit those files; edit the sources above.
 
-   ```bash
-   pip3 install --user python-docx   # first time only
-   python3 build.py
-   ```
+## Tracking
 
-   This rewrites everything under `/learn/`, and merges the `/learn` URLs into `sitemap.xml`
-   automatically (it won't touch any other page's entries).
+- GA4 `G-N0PS84JLP6` and Google Ads `AW-18469638617` load after the page is interactive (see `GTAG_LOADER` in `lib/core.py`).
+- Events sent: `form_start`, `form_step_complete`, `form_submit`, `cta_click`, `phone_click`, `email_click`, and `generate_lead` on `/thank-you`.
+- To count Google Ads conversions, create a conversion action in Google Ads, copy its label and paste it into `ADS_CONVERSION_LABEL` in `lib/core.py`, then rebuild.
+- Each form submission carries utm_*, gclid, landing page and referrer, so the email from Formspree shows which ad or search produced the lead.
 
-3. Check what changed, then commit and push as normal:
+## Other folders
 
-   ```bash
-   git status
-   git add learn/ sitemap.xml content/learn/
-   git commit -m "Update learn guides"
-   git push
-   ```
-
-There's no npm/Node involved anywhere in this repo — `build.py` is a plain Python script, run
-directly.
+- `social/` social post designs and renderer (see `social/README.md`). Web copies of the posts live in `images/`.
+- `brand/` logo concept explorations. Not deployed.
+- `Tool Icons/` source icons (CC BY 3.0, game-icons.net). Credited in the site footer. Not deployed.
+- Rollback point for the pre-redesign site: git tag `pre-redesign-2026-10-30`.
