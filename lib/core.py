@@ -22,9 +22,9 @@ GA = "G-N0PS84JLP6"
 AW = "AW-18469638617"
 MODIFIED = "2026-10-30"  # bump when copy changes materially; used for dateModified + sitemap lastmod
 
-# Optional: paste the Google Ads conversion label here (looks like AbC-D_efG-h12345) to fire an Ads
-# conversion on /thank-you. Left empty on purpose until it is created in the Ads account.
-ADS_CONVERSION_LABEL = ""
+# Google Ads conversion label for "Website lead form submit" (created 2026-11-08 in account 852-021-1554).
+# Fires on /thank-you only after a real form submission.
+ADS_CONVERSION_LABEL = "OfmdCKfwl7QdENmjgedE"
 
 GUIDES = [  # slug, label (kept in sync with build.py's docx parser; used for nav + footer)
     ("hospitality-marketing", "Hospitality", "utensils"),
